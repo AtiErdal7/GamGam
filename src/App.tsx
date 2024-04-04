@@ -12,8 +12,8 @@ function App() {
         <div className="content">
             <h2>WELCOME</h2>
             <Routes>
-                <Route path="/collect-ticket" element={<ClickPage/>}></Route>
-                <Route path="/sign-in Rewards" element={<SigninRewardPage/>}></Route>
+                <Route path="test2/collect-ticket" element={<ClickPage/>}></Route>
+                <Route path="test2/sign-in Rewards" element={<SigninRewardPage/>}></Route>
             </Routes>
         </div>
           <Navbar></Navbar>
