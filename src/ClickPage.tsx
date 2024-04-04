@@ -1,17 +1,17 @@
 import React, {useState,useEffect} from "react";
+import CircularProgressBar from "./CircularProgressBar";
 
 let clickAmount = 0;
 
 let interval: any = null;
 
 const ClickPage = () => {
-
-
     // @ts-ignore
     const savedTickets = JSON.parse(localStorage.getItem('myTickets'));
     if (savedTickets !== null){
         clickAmount = savedTickets;
     }
+    const [progress, setProgress] = useState(clickAmount);
     const [number,setClickAmount] = useState(clickAmount);
     const [tickets,setTickets] = useState(savedTickets)
     const [time, setTime] = useState(10);
@@ -40,9 +40,15 @@ const ClickPage = () => {
         }
     }, [isActive, time]);
     const formatTime = () => {
-        const minutes = Math.floor(time / 60);
-        const seconds = `0${time % 60}`.slice(-2);
-        return `${minutes}:${seconds}`;
+        if (isActive !== false){
+            const minutes = Math.floor(time / 60);
+            const seconds = `0${time % 60}`.slice(-2);
+            return `${minutes}:${seconds} to next tap`;
+        }
+        else{
+            return "Tap to earn"
+        }
+
     };
 
     const resetTimer = () => {
@@ -50,22 +56,35 @@ const ClickPage = () => {
         setIsActive(false);
     };
     const handleClick = () => {
-        clickAmount++;
         setIsActive(true);
         let button = document.getElementById('clickButton');
         // @ts-ignore
         button.setAttribute("disabled","true");
-        setClickAmount(clickAmount);
+        setProgress(prevProgress => Math.min(prevProgress + 1));
+        setClickAmount(clickAmount => clickAmount++);
         setTickets((savedTickets: number) => [savedTickets,clickAmount])
+        console.log(clickAmount)
         localStorage.setItem('myTickets',JSON.stringify(savedTickets))
     }
 
     return (
         <div className="clickPage">
             <h2>Click to collect your ticket</h2>
+            <CircularProgressBar progress={progress} size={150} strokeWidth={7} circleOneStroke="grey" circleTwoStroke="#00aaff" ></CircularProgressBar>
             <div>{formatTime()}</div>
-            <p>{number}</p>
-            <button id="clickButton" onClick={handleClick} >Click</button>
+            <button id="clickButton" onClick={handleClick} style={{ width: '100vw',
+                height: '100vh',
+                margin: 0,
+                border: 'none',
+                backgroundColor: 'transparent',
+                color: 'transparent', // In case there's text you want to hide
+                padding: 0,
+                cursor: 'pointer',
+                outline: 'none', // Removes the outline on focus
+                position: 'absolute',
+                top: 0,
+                left: 0 }}>
+            </button>
         </div>
     );
 }

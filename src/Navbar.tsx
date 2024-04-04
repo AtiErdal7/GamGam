@@ -5,14 +5,12 @@ const Navbar = () => {
     return(
         <nav className="navbar">
             <div className="content">
-                <Link to={"/collect-ticket"} style={{
-                    color: "white",
-                    backgroundColor:"grey",
+                <Link to={"/"} style={{
+                    color: "grey",
                     borderRadius: "8px"
-                }}>Click Page</Link>
+                }}>Play</Link>
                 <Link to={"/sign-in Rewards"} style={{
-                    color: "gold",
-                    backgroundColor:"green",
+                    color: "grey",
                     borderRadius: "8px"
                 }}>Sign-in Rewards</Link>
             </div>
