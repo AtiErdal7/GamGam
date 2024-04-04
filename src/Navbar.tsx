@@ -1,17 +1,20 @@
+import {Link} from "react-router-dom";
+import React from "react";
+
 const Navbar = () => {
     return(
         <nav className="navbar">
             <div className="content">
-                <a href="/test2/collect-ticket"style={{
+                <Link to={"/collect-ticket"} style={{
                     color: "white",
                     backgroundColor:"grey",
                     borderRadius: "8px"
-                }}>Click Page</a>
-                <a href="/test2/sign-in Rewards" style={{
+                }}>Click Page</Link>
+                <Link to={"/sign-in Rewards"} style={{
                     color: "gold",
                     backgroundColor:"green",
                     borderRadius: "8px"
-                }}>Sign-in Rewards</a>
+                }}>Sign-in Rewards</Link>
             </div>
         </nav>
     );

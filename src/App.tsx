@@ -3,7 +3,7 @@ import './App.css';
 import ClickPage from "./ClickPage";
 import Navbar from "./Navbar";
 import SigninRewardPage from "./SigninRewardPage";
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {HashRouter as Router, Route, Routes} from 'react-router-dom';
 
 function App() {
   return (
@@ -12,8 +12,8 @@ function App() {
         <div className="content">
             <h2>WELCOME</h2>
             <Routes>
-                <Route path="test2/collect-ticket" element={<ClickPage/>}></Route>
-                <Route path="test2/sign-in Rewards" element={<SigninRewardPage/>}></Route>
+                <Route path="/collect-ticket" element={<ClickPage/>}></Route>
+                <Route path="/sign-in Rewards" element={<SigninRewardPage/>}></Route>
             </Routes>
         </div>
           <Navbar></Navbar>
