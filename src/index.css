@@ -3,6 +3,7 @@
 
 * {
   margin: 0;
+  padding: 0;
   font-family: "Quicksand", serif;
   color: #333;
 }
@@ -10,34 +11,46 @@
   display: flex;
   margin-left: 25px;
   flex-wrap: wrap;
-  width: 420px;
   align-items: center;
 }
 .navbar {
-  padding: 20px;
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
   display: flex;
+  justify-content: space-around;
   align-items: center;
-  max-width: 600px;
-  margin: 0 auto;
+  width: 100%;
+  padding: 20px 10px;
   border-bottom: 1px solid #f2f2f2;
 }
-.navbar h1 {
-  color: #f1356d;
+
+.tapInfoContainer{
+  display: flex;
+  justify-content: space-around;
+  gap: 8px;
+  padding: 20px;
 }
-.navbar .links {
-  margin-left: auto;
+
+.square  {
+  width: 165px;
+  height: 60px;
+  padding-top: 12px;
+  padding-left: 12px;
+  background-color: #212121;
+  text-align: left;
+  justify-content: left;
+  align-items: center;
+  border-radius: 15px
 }
+
 .navbar a {
-  margin-left: 16px;
   text-decoration: none;
-  padding: 6px;
-}
-.navbar a:hover {
-  color: #f1356d;
+  padding-top: 30px;
 }
 .content {
   min-height: 350px;
-  margin: 40px auto;
 }
 .modal-overlay {
   position: fixed;
@@ -55,6 +68,170 @@
   background: white;
   padding: 20px;
   border-radius: 5px;
-  position: absolute;
   top: 30%;
 }
+
+.navbarButtons{
+  font-weight: bold;
+  margin: 5px;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 30px;
+  color: grey;
+  border-radius: 8px;
+}
+
+.navbarButtons.active {
+  color: #2990FF;
+}
+
+.wallet-link{
+  background-image: url('/src/images/wallet.png');
+}
+.boost-link{
+  background-image: url('/src/images/boost.png');
+}
+.play-link{
+  background-image: url('/src/images/playbutton.png');
+}
+.hotdeals-link{
+  background-image: url('/src/images/hotdeals.png');
+}
+.profile-link{
+  background-image: url('/src/images/profile.png');
+}
+
+.profileBar{
+  position: fixed;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 100%;
+  padding-top: 20px;
+  padding-left: 16px;
+}
+.profile-pic{
+   width: 50px;
+   height: 50px;
+   background-size: 50px;
+   background-color: #2F2F2F;
+   background-image: url('/src/images/ProfilePic.png');
+   border-radius: 50%;
+ }
+
+.profileDetails{
+    position: fixed;
+    display: grid;
+    grid-template-columns: .2fr 1fr;
+    align-items: start;
+    left: 50%;
+    top: 90px;
+    transform: translateX(-50%);
+    width: 100%;
+    padding-left: 16px;
+}
+.rows-container {
+  height: 128px;
+  grid-column: 2 / 3;
+  display: grid;
+  grid-template-rows: repeat(3, 2fr);
+}
+
+.profile-detail-style{
+  display: flex;
+  justify-content: left;
+  height: 50px;
+  text-align: left;
+  font-size: 12px;
+  padding-left: 15px;
+}
+.profile-edit-verified{
+  display: grid;
+  justify-items: center;
+  width: 90px;
+  height: 50px;
+  font-size: 12px;
+  padding-left: 15px;
+
+}
+.profile-pic-big{
+  width: 128px;
+  height: 128px;
+  background-size: 128px;
+  background-color: #2F2F2F;
+  background-image: url('/src/images/ProfilePic.png');
+  border-radius: 15%;
+}
+.edit-button {
+  margin-left: 5px;
+  background-image: url('/src/images/EditBadge.png');
+  width: 44px;
+  height: 22px;
+  border: none;
+  border-radius: 5px;
+  color: grey;
+  cursor: pointer;
+}
+.verified {
+  margin-left: 5px;
+  background-image: url('/src/images/VerifiedBadge.png');
+  color: #00A811;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  font-size: 8px;
+  width: 44px;
+  height: 16px;
+  border: none;
+  border-radius: 5px;
+}
+.wallet-address{
+  margin-left: 15px;
+  width: 250px;
+  height: 28px;
+  background-color: #333333;
+  border-radius: 5px;
+}
+.wallet-copy{
+  margin-left: 85px;
+  border: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url('/src/images/Copy.png');
+  height: 20px;
+  width: 20px;
+}
+
+.scroll-container {
+  margin-left: 30px;
+  padding-top: 80px;
+  width: 82vw;
+  height: 20vh;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  justify-content: left;
+  align-items: center;
+  display: flex;
+}
+
+.item {
+  flex: 0 0 80vw;
+  margin-left: 5px;
+  height: 144px;
+  scroll-snap-align: start;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  border-radius: 4%;
+  border: 3px solid mediumpurple;
+}
+
+.scroll-container:active {
+  cursor: grabbing;  /* Changes cursor during dragging */
+}
+

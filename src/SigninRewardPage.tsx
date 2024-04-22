@@ -18,7 +18,14 @@ const SigninRewardPage = () => {
 
 
     return (
-        <div className="signin">
+        <div className="signin" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 60px)', // Creates 6 columns, each 50px wide
+            gridGap: '6.5px', // Adjust spacing between squares
+            justifyContent: 'left', // Centers the grid horizontally
+            alignContent: 'center', // Centers the grid vertically
+            height: '50vh' // Makes the container full viewport height
+        }}>
             {buttons.map((button) => (
                 <button
                     key={button.id}
@@ -26,11 +33,11 @@ const SigninRewardPage = () => {
                     disabled={!!disabledButtons[button.id]}
                     onClick={()=>claimReward(button.id)}
                     style={{
-                        width: '70px', // Set width for square shape
-                        height: '70px', // Set height for square shape
+                        width: '60px', // Set width for square shape
+                        height: '60px', // Set height for square shape
                         margin: '1px',
                         // @ts-ignore
-                        backgroundColor: disabledButtons[button.id] ? 'darkolivegreen' : 'greenyellow'
+                        backgroundColor: disabledButtons[button.id] ? 'dimgrey' : '#00aaff'
                     }}
                 >
                 </button>
