@@ -5,7 +5,7 @@ import ClickPage from "./ClickPage";
 import Navbar from "./Navbar";
 import ProfilePage from "./ProfilePage";
 import {HashRouter as Router, Route, Routes} from 'react-router-dom';
-import ScrollContainer from "./ScrollContainer";
+import ScrollContainer from "./ScrollContainerHorizontal";
 
 function App() {
     useEffect(() => {

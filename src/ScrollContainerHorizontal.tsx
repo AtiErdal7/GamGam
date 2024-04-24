@@ -1,8 +1,7 @@
 import React, {useRef, useState} from "react";
 import {NavLink} from "react-router-dom";
-import profileBar from "./ProfileBar";
 
-    const ScrollContainer = () => {
+    const ScrollContainerHorizontal = () => {
         const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
         const containerRef = useRef<HTMLDivElement>(null);
         const [isDragging, setIsDragging] = useState(false);
@@ -51,7 +50,7 @@ import profileBar from "./ProfileBar";
 
                 <div
                     ref={containerRef}
-                    className="scroll-container"
+                    className="scroll-container-horizontal"
                     onMouseDown={onDragStart}
                     onMouseMove={onDragMove}
                     onMouseUp={onDragEnd}
@@ -70,4 +69,4 @@ import profileBar from "./ProfileBar";
         );
     };
 
-export default ScrollContainer;
+export default ScrollContainerHorizontal;
