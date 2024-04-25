@@ -55,9 +55,8 @@ const ProfileDetails = () => {
                         color: "white",
                 }}>Great, your MallCards are boosting x1.5 MPs time more</text>
                 </div>
-                <div>
                     <ScrollContainerHorizontal></ScrollContainerHorizontal>
-                </div>
+
             </div>
     );
 };

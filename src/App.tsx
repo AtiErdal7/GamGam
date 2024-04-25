@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import ProfilePage from "./ProfilePage";
 import {HashRouter as Router, Route, Routes} from 'react-router-dom';
 import ScrollContainer from "./ScrollContainerHorizontal";
+import HotDeals from "./HotDeals";
 
 function App() {
     useEffect(() => {
@@ -19,7 +20,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<ClickPage/>}></Route>
                 <Route path="/profile" element={<ProfilePage/>}></Route>
-                <Route path="/hotdeals" element={<ScrollContainer></ScrollContainer>}></Route>
+                <Route path="/hotdeals" element={<HotDeals></HotDeals>}></Route>
             </Routes>
         </div>
           <Navbar></Navbar>
