@@ -35,10 +35,10 @@ const ScrollContainerVertical = () => {
             onMouseMove={onDrag}
             onMouseLeave={stopDragging}
             onMouseUp={stopDragging}
-            style={{ cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none', height: 4*144-75, overflowY: 'auto' }}
+            style={{ cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none', height: items.length/2*142, overflowY: 'auto' }}
         >
             {items.map((item, index) => (
-                <div key={index} className="item2" style={{ height: '100px', textAlign: 'center', lineHeight: '100px' }}>
+                <div key={index} className="item2" style={{ height: '130px', textAlign: 'center', lineHeight: '130px' }}>
                     {item}
                 </div>
             ))}

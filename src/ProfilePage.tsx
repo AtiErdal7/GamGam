@@ -6,9 +6,6 @@ function ProfilePage() {
     return (
         <div>
             <div>
-                <ProfileBar></ProfileBar>
-            </div>
-            <div>
                 <ProfileDetails></ProfileDetails>
             </div>
 

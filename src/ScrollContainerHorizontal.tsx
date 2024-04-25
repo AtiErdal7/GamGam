@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {NavLink} from "react-router-dom";
 
     const ScrollContainerHorizontal = () => {
@@ -7,6 +7,8 @@ import {NavLink} from "react-router-dom";
         const [isDragging, setIsDragging] = useState(false);
         const [startX, setStartX] = useState(0);
         const [scrollStartX, setScrollStartX] = useState(0);
+        const [activeIndex, setActiveIndex] = useState(0);
+        const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
         const onDragStart = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
             setIsDragging(true);
@@ -27,6 +29,32 @@ import {NavLink} from "react-router-dom";
         const onDragEnd = () => {
             setIsDragging(false);
         };
+
+        useEffect(() => {
+            const handleScroll = () => {
+                if (containerRef.current) {
+                    const scrollLeft = containerRef.current.scrollLeft;
+                    let cumulativeWidth = 0;
+
+                    for (let i = 0; i < itemRefs.current.length; i++) {
+                        const item = itemRefs.current[i];
+                        if (item) {
+                            cumulativeWidth += item.offsetWidth;
+                            if (scrollLeft < cumulativeWidth) {
+                                setActiveIndex(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+            };
+
+            containerRef.current?.addEventListener('scroll', handleScroll);
+
+            return () => {
+                containerRef.current?.removeEventListener('scroll', handleScroll);
+            };
+        }, []);
 
         return (
             <div>
@@ -58,13 +86,19 @@ import {NavLink} from "react-router-dom";
                     onTouchStart={onDragStart}
                     onTouchMove={onDragMove}
                     onTouchEnd={onDragEnd}
+                    style={{ overflow: 'auto', whiteSpace: 'nowrap' }}
                 >
-                {items.map((item, index) => (
-                    <div key={index} className="item">
-                        {item}
-                    </div>
-                ))}
-            </div>
+                    {items.map((item, index) => (
+                        <div key={index} ref={el => itemRefs.current[index] = el} className="item" style={{ display: 'flex', width: '100%' }}>
+                            {item}
+                        </div>
+                    ))}
+                </div>
+                <div className="indicator-container">
+                    {items.map((_, index) => (
+                        <span key={index} className={`dot ${index === activeIndex ? 'active' : ''}`}/>
+                    ))}
+                </div>
             </div>
         );
     };

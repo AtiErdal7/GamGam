@@ -53,7 +53,7 @@ const ProfileDetails = () => {
                         textAlign: "center",
                         display: "flex",
                         color: "white",
-                }}>Great, your MallCards are boosting x1.5 MPs time more</text>
+                }}>Great, your GamGam are boosting x1.5 MPs time more</text>
                 </div>
                     <ScrollContainerHorizontal></ScrollContainerHorizontal>
 

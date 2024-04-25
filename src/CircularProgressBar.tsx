@@ -15,7 +15,7 @@ const CircularProgress = () => {
     const size = 260;
     const strokeWidth = 10;
     const circleOneStroke = "grey";
-    const circleTwoStroke="#2990FF";
+    const circleTwoStroke="#DE66D4";
 
     const [progress, setProgress] = useState(clickAmount);
 
@@ -274,7 +274,7 @@ const ProgressBar = ({energy}) => {
     const fillerStyles = {
         height: '100%',
         width: `${energy}%`,
-        backgroundColor: '#2990FF',
+        backgroundColor: '#DE66D4',
         borderRadius: 'inherit',
         transition: 'width 0.5s ease-in-out',
     };
