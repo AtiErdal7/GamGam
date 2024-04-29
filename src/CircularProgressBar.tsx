@@ -6,33 +6,48 @@ let energyLimit = 100;
 let energyRemains = 100;
 
 let interval: any = null;
+let circleInterval: any = null;
 let energyTInterval: any = null;
-let initialTime = 2;
-let increaseTime = 5;
+let initialTime = 15;
+let increaseTime = 60;
 
 // @ts-ignore
 const CircularProgress = () => {
-    const size = 260;
-    const strokeWidth = 10;
-    const circleOneStroke = "grey";
-    const circleTwoStroke="#DE66D4";
+    const initialSize = 250;
+    const shrinkAmount = 11;
+    const maxScore = 100;
+    const minSize = 25;
 
-    const [progress, setProgress] = useState(clickAmount);
+    const [circleSize, setCircleSize] = useState<number>(initialSize);
+    const [score, setScore] = useState<number>(0);
+    const [number,setClickAmount] = useState(clickAmount);
+    const [energy,setEnergyAmount] = useState(energyRemains);
+    const [time, setTime] = useState(initialTime);
+    const [energyTime, setEnergyTime] = useState(increaseTime);
+    const [isActive, setIsActive] = useState(false);
+    const [isEnergyFull, setIsEnergyFull] = useState(false);
 
-    const angle = 2 * Math.PI * (progress / 10000000) - Math.PI / 2;
-    const radius = (size-10 - strokeWidth) / 2;
-    const circumference = radius * 2 * Math.PI;
-    const offset = circumference - (progress / 10000000) * circumference;
+    useEffect(() => {
 
-    const ballRadius = strokeWidth;
-    const ballX = size / 2 + radius * Math.cos(angle);
-    const ballY = size / 2 + radius * Math.sin(angle);
+        if (isActive === false ){
+            circleInterval = setInterval(() => {
+                setCircleSize(prevSize => {
+                    if (prevSize - shrinkAmount > minSize) {
+                        setScore(score+5)
+                        return prevSize - shrinkAmount;
+                    } else {
+                        setScore(0);
+                        return 250;
+                    }
+                });
+            }, 100);
+        }
+        return () => clearInterval(circleInterval); // Clean up interval on component unmount
+    }, [isActive, score]); // Dependency array includes score to reset interval when score is logged
 
-    const centerX = size / 2;
-    const centerY = size / 2;
 
     // @ts-ignore
-    const savedTickets = JSON.parse(localStorage.getItem('myTickets'));
+    const savedTickets = JSON.parse(localStorage.getItem('myScore'));
     if (savedTickets !== null){
         clickAmount = savedTickets;
     }
@@ -46,13 +61,6 @@ const CircularProgress = () => {
         }
     }
 
-    const [number,setClickAmount] = useState(clickAmount);
-    const [energy,setEnergyAmount] = useState(energyRemains);
-    const [time, setTime] = useState(initialTime);
-    const [energyTime, setEnergyTime] = useState(increaseTime);
-    const [isActive, setIsActive] = useState(false);
-    const [isEnergyFull, setIsEnergyFull] = useState(false);
-
     const containerStyle = {
         width: '100%',
         display: 'flex',
@@ -62,7 +70,6 @@ const CircularProgress = () => {
     };
 
     useEffect(() => {
-
         if (isActive && time > 0) {
             interval = setInterval(() => {
                 setTime((time) => time - 1);
@@ -132,26 +139,24 @@ const CircularProgress = () => {
     };
     const handleClick = () => {
         setIsActive(true);
-        let button = document.getElementById('clickButton');
-        clickAmount++
+        clickAmount += score;
         energyRemains--
-        // @ts-ignore
-        button.setAttribute("disabled","true");
+        setScore(0);
         setIsEnergyFull(false);
         setEnergyAmount(energyRemains);
-        setProgress(prevProgress => Math.min(prevProgress + 1));
         setClickAmount(clickAmount);
-        localStorage.setItem('myTickets',JSON.stringify(clickAmount))
+        setCircleSize(250);
+        localStorage.setItem('myScore',JSON.stringify(clickAmount))
         localStorage.setItem('energyLeft',JSON.stringify(energyRemains))
     }
 
     return (
         <div className="clickPage">
             <h2
-            style={{
-                color:"white",
-                paddingTop: '50px'
-            }}>Tap Remains</h2>
+                style={{
+                    color: "white",
+                    paddingTop: '50px'
+                }}>Tap Remains</h2>
             <h2 style={{
                 color: "white",
                 fontSize: "48px"
@@ -171,7 +176,7 @@ const CircularProgress = () => {
 
             <div className="tapInfoContainer">
                 <div className="square">
-                <h2 style={{
+                    <h2 style={{
                         fontSize: '15px',
                         color: '#AAAAAA'
                     }}>Total Tap</h2>
@@ -191,8 +196,6 @@ const CircularProgress = () => {
                     }}>5.6/10M</h2>
                 </div>
             </div>
-
-
             <div style={{
                 cursor: 'pointer',
                 width: '100%',
@@ -201,47 +204,19 @@ const CircularProgress = () => {
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
-            <svg width={size} height={size}>
-                    <g transform={`rotate(-90 ${centerX} ${centerY})`}>
-                        <circle
-                            stroke={circleOneStroke}
-                            fill="transparent"
-                            strokeWidth={strokeWidth}
-                            strokeDasharray={circumference + ' ' + circumference}
-                            style={{strokeDashoffset: 0}}
-                            r={radius}
-                            cx={centerX}
-                            cy={centerY}
-                        />
-                        <circle
-                            stroke={circleTwoStroke}
-                            fill="transparent"
-                            strokeWidth={strokeWidth}
-                            strokeDasharray={circumference}
-                            style={{strokeDashoffset: offset}}
-                            r={radius}
-                            cx={centerX}
-                            cy={centerY}
-                        />
-                    </g>
-                    {/* White ball */}
-                    <circle
-                        cx={ballX}
-                        cy={ballY}
-                        r={ballRadius}
-                        fill="white"
-                    />
-                    <text
-                        x="50%"
-                        y="45%"
-                        alignmentBaseline="middle"
-                        textAnchor="middle"
-                        fill="white"
-                        fontSize={size / 10}
-                        dy=".3em">
-                        {formatTime()}
-                    </text>
-                </svg>
+                <div className="gameArea">
+                    <button
+                        id="circle"
+                        style={{
+                            width: `${circleSize}px`,
+                            height: `${circleSize}px`,
+                            lineHeight: `${circleSize}px`
+                        }}
+                        onClick={handleClick}
+                    >
+                    </button>
+                </div>
+
             </div>
             <button id="clickButton" onClick={handleClick} style={{
                 width: '100vw',
@@ -258,6 +233,18 @@ const CircularProgress = () => {
                 left: 0
             }}>
             </button>
+            <text
+                x="50%"
+                y="45%"
+                alignmentBaseline="middle"
+                textAnchor="middle"
+                fill="white"
+                color="white"
+                fontSize={initialSize / 10}
+                dy=".3em">
+                {formatTime()}
+            </text>
+            <p>Score: {score}</p>
         </div>
     );
 };

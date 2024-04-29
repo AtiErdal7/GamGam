@@ -5,34 +5,38 @@ import ScrollContainerVertical from "./ScrollContainerVertical";
 
 const HotDeals = () => {
     return (
-        <div>
+        <div style={{
+            display:"grid",
+            justifyContent: "center",
+            alignItems: "center"
+        }}>
             <ProfileBar></ProfileBar>
             <h1 style={{
                 textAlign: "left",
                 paddingTop: 70,
-                paddingLeft: 16,
+                paddingLeft: 10,
                 fontSize: 16,
                 color: "white"
             }}>Hot Deals</h1>
             <h2 style={{
                 textAlign: "left",
-                paddingLeft: 16,
+                paddingLeft: 10,
                 fontSize: 12,
             }}>Hello everyone! Welcome to hot deals page.</h2>
             <ScrollContainerHorizontal></ScrollContainerHorizontal>
             <h1 style={{
                 textAlign: "left",
                 paddingTop: 20,
-                paddingLeft: 16,
                 fontSize: 16,
                 color: "white"
             }}>Quest Hub</h1>
             <h2 style={{
                 textAlign: "left",
-                paddingLeft: 16,
-                fontSize: 12,
+                fontSize: 14,
             }}>You can check your available quests here!</h2>
-            <ScrollContainerVertical></ScrollContainerVertical>
+            <div>
+                <ScrollContainerVertical height={window.innerHeight/100*45}></ScrollContainerVertical>
+            </div>
         </div>
     );
 };

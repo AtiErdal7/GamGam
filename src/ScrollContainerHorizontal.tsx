@@ -1,8 +1,13 @@
 import React, {useEffect, useRef, useState} from "react";
-import {NavLink} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 
     const ScrollContainerHorizontal = () => {
-        const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
+        const items = [
+            {id:1, title:"item item-1", url:'http://www.google.com/',text1: "Hello!",text2:"Complete your mission"},
+            {id:2, title:"item item-2",url:'http://www.google.com/',text1: "Ohayouuu!",text2:"Watch Video Ads"},
+            {id:3, title:"item item-3",url:'http://www.google.com/',text1: "Hi!",text2:"Tweet somethings on x"},
+            {id:4, title:"item item-4",url:'http://www.google.com/',text1: "Hiiii!",text2:"Fight!"},
+        ];
         const containerRef = useRef<HTMLDivElement>(null);
         const [isDragging, setIsDragging] = useState(false);
         const [startX, setStartX] = useState(0);
@@ -89,8 +94,30 @@ import {NavLink} from "react-router-dom";
                     style={{ overflow: 'auto', whiteSpace: 'nowrap' }}
                 >
                     {items.map((item, index) => (
-                        <div key={index} ref={el => itemRefs.current[index] = el} className="item" style={{ display: 'flex', width: '100%' }}>
-                            {item}
+                        <div key={item.id} ref={el => itemRefs.current[index] = el} className={item.title}
+                        >
+                            <Link to={item.url} style={{
+                                width: '100%',
+                                height: '100%',
+                                textDecoration: "none",
+                            }}>
+                                <div className={"item-overlay"}>
+                                    <div className={"item-container"}>
+                                        <h2 style={{
+                                            paddingLeft: 10,
+                                            fontSize: 24,
+                                            color: "white"
+                                        }}>{item.text1}</h2>
+                                        <h2 style={{
+                                            paddingLeft: 10,
+                                            fontSize: 20,
+                                            color: "white"
+                                        }}>{item.text2}</h2>
+                                    </div>
+                                </div>
+
+                            </Link>
+
                         </div>
                     ))}
                 </div>
@@ -98,6 +125,7 @@ import {NavLink} from "react-router-dom";
                     {items.map((_, index) => (
                         <span key={index} className={`dot ${index === activeIndex ? 'active' : ''}`}/>
                     ))}
+
                 </div>
             </div>
         );

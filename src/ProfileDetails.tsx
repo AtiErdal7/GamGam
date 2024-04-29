@@ -1,8 +1,23 @@
-import React from 'react';
-import Badge from './images/Badge.png';
+import React, {useState} from 'react';
 import ScrollContainerHorizontal from "./ScrollContainerVertical";
 
 const ProfileDetails = () => {
+
+    const [isCopied, setIsCopied] = useState(false);
+    const walletId = "000000000001";
+
+    const handleClickCopy = () => {
+        navigator.clipboard.writeText(walletId)
+            .then(() => {
+                console.log('Text successfully copied to clipboard');
+                setIsCopied(true);
+                setTimeout(() => setIsCopied(false), 2000); // Reset after 2s
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+    }
+
     return (
             <div className="profileDetails">
                 <div className="profile-pic-big"></div>
@@ -24,12 +39,12 @@ const ProfileDetails = () => {
                     </div>
                     <div className={"wallet-address"}>
                         <text style={{
-                            paddingTop: "3px",
                             paddingLeft: "10px",
                             textAlign: "left",
                             display: "flex",
                             color: "grey"
-                        }}>0000000000000 <button className={"wallet-copy"}></button></text>
+                        }}>{walletId} </text>
+                        <button onClick={handleClickCopy} className={"wallet-copy"}></button>
                     </div>
                     <div>
                         <h2 style={{
@@ -55,7 +70,13 @@ const ProfileDetails = () => {
                         color: "white",
                 }}>Great, your GamGam are boosting x1.5 MPs time more</text>
                 </div>
-                    <ScrollContainerHorizontal></ScrollContainerHorizontal>
+                <div style={{
+                    paddingLeft: 10,
+                    gridArea: "third-row"
+                }}>
+                    <ScrollContainerHorizontal height={window.innerHeight/100*67}></ScrollContainerHorizontal>
+                </div>
+
 
             </div>
     );

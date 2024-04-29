@@ -1,6 +1,7 @@
 import React, {useRef, useState} from 'react';
 
-const ScrollContainerVertical = () => {
+// @ts-ignore
+const ScrollContainerVertical = ({height}) => {
     const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4','Item 5','Item 6','Item 7','Item 8'];
     const [isDragging, setIsDragging] = useState(false);
     const [startY, setStartY] = useState(0);
@@ -35,10 +36,10 @@ const ScrollContainerVertical = () => {
             onMouseMove={onDrag}
             onMouseLeave={stopDragging}
             onMouseUp={stopDragging}
-            style={{ cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none', height: items.length/2*142, overflowY: 'auto' }}
+            style={{cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none', height: height, overflowY: 'auto'}}
         >
             {items.map((item, index) => (
-                <div key={index} className="item2" style={{ height: '130px', textAlign: 'center', lineHeight: '130px' }}>
+                <div key={index} className="item2" style={{textAlign: 'center', lineHeight: '130px'}}>
                     {item}
                 </div>
             ))}
