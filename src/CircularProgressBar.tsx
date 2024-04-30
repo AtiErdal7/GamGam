@@ -8,46 +8,33 @@ let energyRemains = 100;
 let interval: any = null;
 let circleInterval: any = null;
 let energyTInterval: any = null;
-let initialTime = 15;
+let initialTime = 1;
 let increaseTime = 60;
 
 // @ts-ignore
 const CircularProgress = () => {
-    const initialSize = 250;
-    const shrinkAmount = 11;
-    const maxScore = 100;
-    const minSize = 25;
 
-    const [circleSize, setCircleSize] = useState<number>(initialSize);
-    const [score, setScore] = useState<number>(0);
-    const [number,setClickAmount] = useState(clickAmount);
-    const [energy,setEnergyAmount] = useState(energyRemains);
-    const [time, setTime] = useState(initialTime);
-    const [energyTime, setEnergyTime] = useState(increaseTime);
-    const [isActive, setIsActive] = useState(false);
-    const [isEnergyFull, setIsEnergyFull] = useState(false);
+    const size = 260;
+    const strokeWidth = 10;
+    const circleOneStroke = "grey";
+    const yellowSectorSize = 8; // Degrees for yellow sectors
+    const greenSectorSize = 14;
 
-    useEffect(() => {
+    const [progress, setProgress] = useState(0);
 
-        if (isActive === false ){
-            circleInterval = setInterval(() => {
-                setCircleSize(prevSize => {
-                    if (prevSize - shrinkAmount > minSize) {
-                        setScore(score+5)
-                        return prevSize - shrinkAmount;
-                    } else {
-                        setScore(0);
-                        return 250;
-                    }
-                });
-            }, 100);
-        }
-        return () => clearInterval(circleInterval); // Clean up interval on component unmount
-    }, [isActive, score]); // Dependency array includes score to reset interval when score is logged
+    const angle = 2 * Math.PI * (progress / 360) - Math.PI / 2;
+    const radius = (size - strokeWidth) / 2;
+    const radiusForZone = (size) / 2;
 
+    const ballRadius = strokeWidth-4;
+    const ballX = size / 2 + radius * Math.cos(angle);
+    const ballY = size / 2 + radius * Math.sin(angle);
+
+    const centerX = size / 2;
+    const centerY = size / 2;
 
     // @ts-ignore
-    const savedTickets = JSON.parse(localStorage.getItem('myScore'));
+    const savedTickets = JSON.parse(localStorage.getItem('myTickets'));
     if (savedTickets !== null){
         clickAmount = savedTickets;
     }
@@ -61,6 +48,15 @@ const CircularProgress = () => {
         }
     }
 
+    const [number,setClickAmount] = useState(clickAmount);
+    const [energy,setEnergyAmount] = useState(energyRemains);
+    const [indicatorAngle, setIndicatorAngle] = useState(angle);
+    const [time, setTime] = useState(initialTime);
+    const [energyTime, setEnergyTime] = useState(increaseTime);
+    const [isActive, setIsActive] = useState(false);
+    const [isEnergyFull, setIsEnergyFull] = useState(false);
+    const [hits, setHits] = useState(0);
+
     const containerStyle = {
         width: '100%',
         display: 'flex',
@@ -69,7 +65,23 @@ const CircularProgress = () => {
         cursor: 'pointer'
     };
 
+    //circle the ball
     useEffect(() => {
+        const circleInt = setInterval(() => {
+            setProgress(progress => progress+1)
+        },10)
+        
+        if (progress>360)
+            setProgress(0);
+
+        return () =>{
+            clearInterval(circleInt);
+        }
+    }, [progress]);
+
+    //timer after click
+    useEffect(() => {
+
         if (isActive && time > 0) {
             interval = setInterval(() => {
                 setTime((time) => time - 1);
@@ -90,7 +102,7 @@ const CircularProgress = () => {
         }
     }, [isActive, time]);
 
-
+    //energy system
     useEffect(() => {
         if (!isEnergyFull && energyTime > 0){
             energyTInterval = setInterval(() => {
@@ -138,23 +150,72 @@ const CircularProgress = () => {
         setIsActive(false);
     };
     const handleClick = () => {
+        const inGreen = progress >= indicatorAngle+8 && progress <= indicatorAngle + 22;
+        const inYellow = ((progress <= indicatorAngle + 30 && progress >= indicatorAngle + 22) || (progress >= indicatorAngle &&progress <= indicatorAngle + 8));
+
+        console.log(progress)
+        console.log(indicatorAngle)
+
+        if (inGreen || inYellow) {
+            setHits(prevHits => prevHits + 1);
+            if (inGreen){
+                clickAmount += 3;
+                console.log("green")
+            }
+            else if (inYellow){
+                clickAmount += 2;
+                console.log("yellow")
+            }
+            console.log("in")
+        } else {
+            setHits(0);
+            console.log("out")
+        }
+
+        if (hits + 1 === 3) { // Check if it's the third successful hit before resetting
+            setIndicatorAngle(Math.random() * 360); // Move the indicator to a new random angle
+            setHits(0); // Reset hits
+        }
+
         setIsActive(true);
-        clickAmount += score;
+        let button = document.getElementById('clickButton');
         energyRemains--
-        setScore(0);
+        // @ts-ignore
+        button.setAttribute("disabled","true");
         setIsEnergyFull(false);
         setEnergyAmount(energyRemains);
+        setProgress(prevProgress => Math.min(prevProgress + 1));
         setClickAmount(clickAmount);
-        setCircleSize(250);
-        localStorage.setItem('myScore',JSON.stringify(clickAmount))
+        localStorage.setItem('myTickets',JSON.stringify(clickAmount))
         localStorage.setItem('energyLeft',JSON.stringify(energyRemains))
     }
+    const calculateSectorPath = (startAngle: number, endAngle: number): string => {
+        const start = polarToCartesian(radiusForZone, startAngle);
+        const end = polarToCartesian(radiusForZone, endAngle);
+        const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+        return [
+            "M", radiusForZone, radiusForZone,
+            "L", start.x, start.y,
+            "A", radiusForZone, radiusForZone, 0, largeArcFlag, 1, end.x, end.y,
+            "L", radiusForZone, radiusForZone
+        ].join(" ");
+    };
+    const polarToCartesian = (radius: number, angleInDegrees: number) => {
+        const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+
+        return {
+            x: radiusForZone + (radiusForZone * Math.cos(angleInRadians)),
+            y: radiusForZone + (radiusForZone * Math.sin(angleInRadians))
+        };
+    };
+
 
     return (
         <div className="clickPage">
             <h2
                 style={{
-                    color: "white",
+                    color:"white",
                     paddingTop: '50px'
                 }}>Tap Remains</h2>
             <h2 style={{
@@ -196,6 +257,8 @@ const CircularProgress = () => {
                     }}>5.6/10M</h2>
                 </div>
             </div>
+
+
             <div style={{
                 cursor: 'pointer',
                 width: '100%',
@@ -204,19 +267,50 @@ const CircularProgress = () => {
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
-                <div className="gameArea">
-                    <button
-                        id="circle"
-                        style={{
-                            width: `${circleSize}px`,
-                            height: `${circleSize}px`,
-                            lineHeight: `${circleSize}px`
-                        }}
-                        onClick={handleClick}
-                    >
-                    </button>
-                </div>
+                <svg width={size} height={size}>
+                    <g transform={`rotate(0 ${centerX} ${centerY})`}>
+                        <circle
+                            stroke={circleOneStroke}
+                            fill="transparent"
+                            strokeWidth={strokeWidth}
+                            style={{strokeDashoffset: 0}}
+                            r={radius}
+                            cx={centerX}
+                            cy={centerY}
 
+                        />
+                        <path d={calculateSectorPath(indicatorAngle, indicatorAngle + yellowSectorSize)} fill="#DAD300"/>
+                        <path
+                            d={calculateSectorPath(indicatorAngle + yellowSectorSize, indicatorAngle + yellowSectorSize + greenSectorSize)}
+                            fill="#04650F"/>
+                        <path
+                            d={calculateSectorPath(indicatorAngle + yellowSectorSize + greenSectorSize, indicatorAngle + 2 * yellowSectorSize + greenSectorSize)}
+                            fill="#DAD300"/>
+                        <circle
+                            fill="transparent"
+                            strokeWidth={strokeWidth}
+                            r={radius}
+                            cx={centerX}
+                            cy={centerY}
+                        />
+                    </g>
+                    <circle
+                        cx={ballX}
+                        cy={ballY}
+                        r={ballRadius}
+                        fill="#DE66D4"
+                    />
+                    <text
+                        x="50%"
+                        y="45%"
+                        alignmentBaseline="middle"
+                        textAnchor="middle"
+                        fill="white"
+                        fontSize={size / 10}
+                        dy=".3em">
+                        {formatTime()}
+                    </text>
+                </svg>
             </div>
             <button id="clickButton" onClick={handleClick} style={{
                 width: '100vw',
@@ -233,18 +327,6 @@ const CircularProgress = () => {
                 left: 0
             }}>
             </button>
-            <text
-                x="50%"
-                y="45%"
-                alignmentBaseline="middle"
-                textAnchor="middle"
-                fill="white"
-                color="white"
-                fontSize={initialSize / 10}
-                dy=".3em">
-                {formatTime()}
-            </text>
-            <p>Score: {score}</p>
         </div>
     );
 };
