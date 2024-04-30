@@ -10,6 +10,8 @@ let circleInterval: any = null;
 let energyTInterval: any = null;
 let initialTime = 1;
 let increaseTime = 60;
+let yellowSectorSize = 8;
+let greenSectorSize = 14;
 
 // @ts-ignore
 const CircularProgress = () => {
@@ -17,8 +19,7 @@ const CircularProgress = () => {
     const size = 260;
     const strokeWidth = 10;
     const circleOneStroke = "grey";
-    const yellowSectorSize = 8; // Degrees for yellow sectors
-    const greenSectorSize = 14;
+
 
     const [progress, setProgress] = useState(0);
 
@@ -52,6 +53,7 @@ const CircularProgress = () => {
     const [energy,setEnergyAmount] = useState(energyRemains);
     const [indicatorAngle, setIndicatorAngle] = useState(angle);
     const [time, setTime] = useState(initialTime);
+    const [speed, setSpeed] = useState(1);
     const [energyTime, setEnergyTime] = useState(increaseTime);
     const [isActive, setIsActive] = useState(false);
     const [isEnergyFull, setIsEnergyFull] = useState(false);
@@ -68,7 +70,7 @@ const CircularProgress = () => {
     //circle the ball
     useEffect(() => {
         const circleInt = setInterval(() => {
-            setProgress(progress => progress+1)
+            setProgress(progress => progress+speed)
         },10)
         
         if (progress>360)
@@ -77,7 +79,7 @@ const CircularProgress = () => {
         return () =>{
             clearInterval(circleInt);
         }
-    }, [progress]);
+    }, [progress, speed]);
 
     //timer after click
     useEffect(() => {
@@ -153,27 +155,31 @@ const CircularProgress = () => {
         const inGreen = progress >= indicatorAngle+8 && progress <= indicatorAngle + 22;
         const inYellow = ((progress <= indicatorAngle + 30 && progress >= indicatorAngle + 22) || (progress >= indicatorAngle &&progress <= indicatorAngle + 8));
 
-        console.log(progress)
-        console.log(indicatorAngle)
-
         if (inGreen || inYellow) {
             setHits(prevHits => prevHits + 1);
             if (inGreen){
                 clickAmount += 3;
-                console.log("green")
             }
             else if (inYellow){
                 clickAmount += 2;
-                console.log("yellow")
             }
-            console.log("in")
         } else {
             setHits(0);
-            console.log("out")
+            setSpeed(1);
+            yellowSectorSize =8;
+            greenSectorSize =14;
+            setIndicatorAngle(Math.random() * 360);
         }
 
         if (hits + 1 === 3) { // Check if it's the third successful hit before resetting
-            setIndicatorAngle(Math.random() * 360); // Move the indicator to a new random angle
+            if (yellowSectorSize > 3)
+                yellowSectorSize -=1;
+            if (greenSectorSize > 1)
+                greenSectorSize -=1;
+            if (speed < 4)
+                setSpeed(speed => speed+0.6);
+
+            setIndicatorAngle(Math.random() * 360);
             setHits(0); // Reset hits
         }
 
@@ -314,7 +320,7 @@ const CircularProgress = () => {
             </div>
             <button id="clickButton" onClick={handleClick} style={{
                 width: '100vw',
-                height: '60vh',
+                height: '90vh',
                 margin: 0,
                 border: 'none',
                 backgroundColor: 'transparent',
