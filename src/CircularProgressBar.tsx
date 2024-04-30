@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {debug} from "node:util";
-
 let clickAmount = 0;
 let energyLimit = 100;
 let energyRemains = 100;
 
-let interval: any = null;
-let circleInterval: any = null;
+let interval: any = null
 let energyTInterval: any = null;
 let initialTime = 1;
-let increaseTime = 60;
+let increaseTime = 5;
 let yellowSectorSize = 8;
 let greenSectorSize = 14;
+let yellowIncrease = 2;
+let greenIncrease = 3;
+let increaseAmount = 0;
 
 // @ts-ignore
 const CircularProgress = () => {
@@ -54,6 +54,9 @@ const CircularProgress = () => {
     const [indicatorAngle, setIndicatorAngle] = useState(angle);
     const [time, setTime] = useState(initialTime);
     const [speed, setSpeed] = useState(1);
+    const [streak, setStreak] = useState(0);
+    const [showMessage, setShowMessage] = useState(false);
+    const [messageColor, setMessageColor] = useState("white");
     const [energyTime, setEnergyTime] = useState(increaseTime);
     const [isActive, setIsActive] = useState(false);
     const [isEnergyFull, setIsEnergyFull] = useState(false);
@@ -62,8 +65,8 @@ const CircularProgress = () => {
     const containerStyle = {
         width: '100%',
         display: 'flex',
-        justifyContent: 'center', // Center horizontally
-        alignItems: 'center', // Center vertically
+        justifyContent: 'center',
+        alignItems: 'center',
         cursor: 'pointer'
     };
 
@@ -157,15 +160,24 @@ const CircularProgress = () => {
 
         if (inGreen || inYellow) {
             setHits(prevHits => prevHits + 1);
+            setStreak(streak => streak + 1);
             if (inGreen){
-                clickAmount += 3;
+                clickAmount += greenIncrease;
+                increaseAmount = greenIncrease
+                setMessageColor("green");
             }
             else if (inYellow){
-                clickAmount += 2;
+                clickAmount += yellowIncrease;
+                increaseAmount = yellowIncrease
+                setMessageColor("gold");
             }
+            setShowMessage(true)
+            setTimeout(() => setShowMessage(false), 1000);
+
         } else {
             setHits(0);
             setSpeed(1);
+            setStreak(0);
             yellowSectorSize =8;
             greenSectorSize =14;
             setIndicatorAngle(Math.random() * 360);
@@ -242,16 +254,6 @@ const CircularProgress = () => {
             </h2>
 
             <div className="tapInfoContainer">
-                <div className="square">
-                    <h2 style={{
-                        fontSize: '15px',
-                        color: '#AAAAAA'
-                    }}>Total Tap</h2>
-                    <h2 style={{
-                        fontSize: '20px',
-                        color: 'white'
-                    }}>{clickAmount}</h2>
-                </div>
                 <div className="square">
                     <h2 style={{
                         fontSize: '15px',
@@ -333,6 +335,13 @@ const CircularProgress = () => {
                 left: 0
             }}>
             </button>
+            <h2 style={{
+                paddingTop:10
+            }}>Streak: {streak}</h2>
+            <h2 style={{
+                color: "white",
+                paddingTop:10
+            }}>Tickets: <text>{clickAmount}</text> {showMessage && <text style={{color: messageColor}}>+{increaseAmount}</text>}</h2>
         </div>
     );
 };

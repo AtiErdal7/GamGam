@@ -12,7 +12,7 @@ const Navbar = () => {
             <NavLink to={"/wallet"} className="navbarButtons wallet-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'" >Wallet</NavLink>
             <NavLink to={"/boosts"} className="navbarButtons boost-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Boost</NavLink>
             <NavLink to={"/"} className="navbarButtons play-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Play</NavLink>
-            <NavLink to={"/hotdeals"} className="navbarButtons hotdeals-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Hot Deals</NavLink>
+            <NavLink to={"/deals"} className="navbarButtons hotdeals-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Deals</NavLink>
             <NavLink to={"/profile"} className="navbarButtons profile-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Profile</NavLink>
         </nav>
     );

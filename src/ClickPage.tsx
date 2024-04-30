@@ -1,8 +1,6 @@
 import React, {useEffect} from "react";
 import CircularProgressBar from "./CircularProgressBar";
 
-
-
 const ClickPage = () => {
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -14,7 +12,7 @@ const ClickPage = () => {
             <CircularProgressBar></CircularProgressBar>
             <h2
                 style={{
-                    paddingTop: "46px",
+                    paddingTop: "26px",
                     color: "white",
                     fontSize: "16px",
                     marginBottom: "10px"
