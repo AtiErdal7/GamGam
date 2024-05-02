@@ -254,6 +254,9 @@ button:focus, input:focus, select:focus, textarea:focus {
   align-items: center;
   display: flex;
 }
+.glow-path {
+  filter: drop-shadow(0 0 3px rgba(40, 144, 255, 1)); /* Blue glow */
+}
 
 .indicator-container {
   text-align: center;
@@ -366,8 +369,9 @@ button:focus, input:focus, select:focus, textarea:focus {
 .item2 {
   margin-top: 10px;
   color: dimgrey;
-  width: 320px;
-  height: 130px;
+  flex: 0 0 80vw;
+  margin-left: 5px;
+  height: 16vh;
   scroll-snap-align: start;
   justify-content: center;
   align-items: center;

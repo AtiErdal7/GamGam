@@ -20,7 +20,6 @@ const CircularProgress = () => {
     const strokeWidth = 10;
     const circleOneStroke = "grey";
 
-
     const [progress, setProgress] = useState(0);
 
     const angle = 2 * Math.PI * (progress / 360) - Math.PI / 2;
@@ -291,17 +290,17 @@ const CircularProgress = () => {
                             cy={centerY}
 
                         />
-                        <path d={calculateSectorPath(indicatorAngle, indicatorAngle + yellowSectorSize)} fill="#DAD300"/>
+                        <path d={calculateSectorPath(indicatorAngle, indicatorAngle + yellowSectorSize)} fill="#00FF9E" className="glow-path"/>
                         <path
                             d={calculateSectorPath(indicatorAngle + yellowSectorSize, indicatorAngle + yellowSectorSize + greenSectorSize)}
-                            fill="#04650F"/>
+                            fill=" #1A9FDF" className="glow-path"/>
                         <path
                             d={calculateSectorPath(indicatorAngle + yellowSectorSize + greenSectorSize, indicatorAngle + 2 * yellowSectorSize + greenSectorSize)}
-                            fill="#DAD300"/>
+                            fill="#00FF9E" className="glow-path"/>
+
                         <circle
-                            fill="transparent"
                             strokeWidth={strokeWidth}
-                            r={radius}
+                            r={radius-5}
                             cx={centerX}
                             cy={centerY}
                         />
