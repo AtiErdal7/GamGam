@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import ProfilePage from "./ProfilePage";
 import {HashRouter as Router, Route, Routes} from 'react-router-dom';
 import HotDeals from "./HotDeals";
+import BoostPage from "./BoostPage";
 
 function App() {
     useEffect(() => {
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/" element={<ClickPage/>}></Route>
                 <Route path="/profile" element={<ProfilePage/>}></Route>
                 <Route path="/deals" element={<HotDeals></HotDeals>}></Route>
+                <Route path="/boosts" element={<BoostPage></BoostPage>}></Route>
             </Routes>
         </div>
           <Navbar></Navbar>
