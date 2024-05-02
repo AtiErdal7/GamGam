@@ -6,7 +6,7 @@ let energyRemains = 100;
 let interval: any = null
 let energyTInterval: any = null;
 let initialTime = 1;
-let increaseTime = 5;
+let increaseTime = 120;
 let yellowSectorSize = 8;
 let greenSectorSize = 14;
 let yellowIncrease = 2;
@@ -59,7 +59,6 @@ const CircularProgress = () => {
     const [energyTime, setEnergyTime] = useState(increaseTime);
     const [isActive, setIsActive] = useState(false);
     const [isEnergyFull, setIsEnergyFull] = useState(false);
-    const [hits, setHits] = useState(0);
 
     const containerStyle = {
         width: '100%',
@@ -158,7 +157,13 @@ const CircularProgress = () => {
         const inYellow = ((progress <= indicatorAngle + (2*yellowSectorSize)+greenSectorSize && progress >= indicatorAngle + yellowSectorSize+greenSectorSize) || (progress >= indicatorAngle &&progress <= indicatorAngle + yellowSectorSize));
 
         if (inGreen || inYellow) {
-            setHits(prevHits => prevHits + 1);
+            if (yellowSectorSize > 3)
+                yellowSectorSize -=1;
+            if (greenSectorSize > 1)
+                greenSectorSize -=1;
+            if (speed < 4)
+                setSpeed(speed => speed+0.6);
+
             setStreak(streak => streak + 1);
             if (inGreen){
                 clickAmount += greenIncrease;
@@ -173,31 +178,15 @@ const CircularProgress = () => {
             setShowMessage(true)
             setTimeout(() => setShowMessage(false), 1000);
 
-            console.log(progress)
-            console.log(indicatorAngle)
-
         } else {
-            setHits(0);
             setSpeed(1);
             setStreak(0);
             yellowSectorSize =8;
             greenSectorSize =14;
-            setIndicatorAngle(Math.random() * 360);
-            console.log(indicatorAngle)
         }
 
-        if (hits + 1 === 3) { // Check if it's the third successful hit before resetting
-            if (yellowSectorSize > 3)
-                yellowSectorSize -=1;
-            if (greenSectorSize > 1)
-                greenSectorSize -=1;
-            if (speed < 4)
-                setSpeed(speed => speed+0.6);
 
-            setIndicatorAngle(Math.random() * 360);
-            setHits(0); // Reset hits
-        }
-
+        setIndicatorAngle(Math.random() * 360);
         setIsActive(true);
         let button = document.getElementById('clickButton');
         energyRemains--
