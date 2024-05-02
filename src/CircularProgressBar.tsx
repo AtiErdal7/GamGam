@@ -16,7 +16,7 @@ let increaseAmount = 0;
 // @ts-ignore
 const CircularProgress = () => {
 
-    const size = 260;
+    const size = 220;
     const strokeWidth = 10;
     const circleOneStroke = "grey";
 
@@ -51,7 +51,7 @@ const CircularProgress = () => {
 
     const [number,setClickAmount] = useState(clickAmount);
     const [energy,setEnergyAmount] = useState(energyRemains);
-    const [indicatorAngle, setIndicatorAngle] = useState(angle);
+    const [indicatorAngle, setIndicatorAngle] = useState(0);
     const [time, setTime] = useState(initialTime);
     const [speed, setSpeed] = useState(1);
     const [streak, setStreak] = useState(0);
@@ -155,8 +155,8 @@ const CircularProgress = () => {
         setIsActive(false);
     };
     const handleClick = () => {
-        const inGreen = progress >= indicatorAngle+8 && progress <= indicatorAngle + 22;
-        const inYellow = ((progress <= indicatorAngle + 30 && progress >= indicatorAngle + 22) || (progress >= indicatorAngle &&progress <= indicatorAngle + 8));
+        const inGreen = progress >= indicatorAngle+yellowSectorSize && progress <= indicatorAngle + yellowSectorSize+greenSectorSize;
+        const inYellow = ((progress <= indicatorAngle + (2*yellowSectorSize)+greenSectorSize && progress >= indicatorAngle + yellowSectorSize+greenSectorSize) || (progress >= indicatorAngle &&progress <= indicatorAngle + yellowSectorSize));
 
         if (inGreen || inYellow) {
             setHits(prevHits => prevHits + 1);
@@ -174,6 +174,9 @@ const CircularProgress = () => {
             setShowMessage(true)
             setTimeout(() => setShowMessage(false), 1000);
 
+            console.log(progress)
+            console.log(indicatorAngle)
+
         } else {
             setHits(0);
             setSpeed(1);
@@ -181,6 +184,7 @@ const CircularProgress = () => {
             yellowSectorSize =8;
             greenSectorSize =14;
             setIndicatorAngle(Math.random() * 360);
+            console.log(indicatorAngle)
         }
 
         if (hits + 1 === 3) { // Check if it's the third successful hit before resetting
@@ -234,7 +238,7 @@ const CircularProgress = () => {
             <h2
                 style={{
                     color:"white",
-                    paddingTop: '50px'
+                    paddingTop: '30px'
                 }}>Tap Remains</h2>
             <h2 style={{
                 color: "white",
