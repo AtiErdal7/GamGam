@@ -6,7 +6,7 @@ let energyRemains = 100;
 let interval: any = null
 let energyTInterval: any = null;
 let initialTime = 1;
-let increaseTime = 5;
+let increaseTime = 120;
 let yellowSectorSize = 8;
 let greenSectorSize = 14;
 let yellowIncrease = 2;
@@ -16,10 +16,9 @@ let increaseAmount = 0;
 // @ts-ignore
 const CircularProgress = () => {
 
-    const size = 260;
+    const size = 220;
     const strokeWidth = 10;
     const circleOneStroke = "grey";
-
 
     const [progress, setProgress] = useState(0);
 
@@ -51,7 +50,7 @@ const CircularProgress = () => {
 
     const [number,setClickAmount] = useState(clickAmount);
     const [energy,setEnergyAmount] = useState(energyRemains);
-    const [indicatorAngle, setIndicatorAngle] = useState(angle);
+    const [indicatorAngle, setIndicatorAngle] = useState(0);
     const [time, setTime] = useState(initialTime);
     const [speed, setSpeed] = useState(1);
     const [streak, setStreak] = useState(0);
@@ -60,7 +59,6 @@ const CircularProgress = () => {
     const [energyTime, setEnergyTime] = useState(increaseTime);
     const [isActive, setIsActive] = useState(false);
     const [isEnergyFull, setIsEnergyFull] = useState(false);
-    const [hits, setHits] = useState(0);
 
     const containerStyle = {
         width: '100%',
@@ -155,11 +153,17 @@ const CircularProgress = () => {
         setIsActive(false);
     };
     const handleClick = () => {
-        const inGreen = progress >= indicatorAngle+8 && progress <= indicatorAngle + 22;
-        const inYellow = ((progress <= indicatorAngle + 30 && progress >= indicatorAngle + 22) || (progress >= indicatorAngle &&progress <= indicatorAngle + 8));
+        const inGreen = progress >= indicatorAngle+yellowSectorSize && progress <= indicatorAngle + yellowSectorSize+greenSectorSize;
+        const inYellow = ((progress <= indicatorAngle + (2*yellowSectorSize)+greenSectorSize && progress >= indicatorAngle + yellowSectorSize+greenSectorSize) || (progress >= indicatorAngle &&progress <= indicatorAngle + yellowSectorSize));
 
         if (inGreen || inYellow) {
-            setHits(prevHits => prevHits + 1);
+            if (yellowSectorSize > 3)
+                yellowSectorSize -=1;
+            if (greenSectorSize > 1)
+                greenSectorSize -=1;
+            if (speed < 4)
+                setSpeed(speed => speed+0.6);
+
             setStreak(streak => streak + 1);
             if (inGreen){
                 clickAmount += greenIncrease;
@@ -175,26 +179,14 @@ const CircularProgress = () => {
             setTimeout(() => setShowMessage(false), 1000);
 
         } else {
-            setHits(0);
             setSpeed(1);
             setStreak(0);
             yellowSectorSize =8;
             greenSectorSize =14;
-            setIndicatorAngle(Math.random() * 360);
         }
 
-        if (hits + 1 === 3) { // Check if it's the third successful hit before resetting
-            if (yellowSectorSize > 3)
-                yellowSectorSize -=1;
-            if (greenSectorSize > 1)
-                greenSectorSize -=1;
-            if (speed < 4)
-                setSpeed(speed => speed+0.6);
 
-            setIndicatorAngle(Math.random() * 360);
-            setHits(0); // Reset hits
-        }
-
+        setIndicatorAngle(Math.random() * 360);
         setIsActive(true);
         let button = document.getElementById('clickButton');
         energyRemains--
@@ -234,7 +226,7 @@ const CircularProgress = () => {
             <h2
                 style={{
                     color:"white",
-                    paddingTop: '50px'
+                    paddingTop: '30px'
                 }}>Tap Remains</h2>
             <h2 style={{
                 color: "white",
@@ -287,17 +279,17 @@ const CircularProgress = () => {
                             cy={centerY}
 
                         />
-                        <path d={calculateSectorPath(indicatorAngle, indicatorAngle + yellowSectorSize)} fill="#DAD300"/>
+                        <path d={calculateSectorPath(indicatorAngle, indicatorAngle + yellowSectorSize)} fill="#00FF9E" className="glow-path"/>
                         <path
                             d={calculateSectorPath(indicatorAngle + yellowSectorSize, indicatorAngle + yellowSectorSize + greenSectorSize)}
-                            fill="#04650F"/>
+                            fill=" #1A9FDF" className="glow-path"/>
                         <path
                             d={calculateSectorPath(indicatorAngle + yellowSectorSize + greenSectorSize, indicatorAngle + 2 * yellowSectorSize + greenSectorSize)}
-                            fill="#DAD300"/>
+                            fill="#00FF9E" className="glow-path"/>
+
                         <circle
-                            fill="transparent"
                             strokeWidth={strokeWidth}
-                            r={radius}
+                            r={radius-5}
                             cx={centerX}
                             cy={centerY}
                         />

@@ -12,24 +12,23 @@ const ClickPage = () => {
             <CircularProgressBar></CircularProgressBar>
             <h2
                 style={{
-                    paddingTop: "26px",
+                    paddingTop: "6px",
                     color: "white",
                     fontSize: "16px",
-                    marginBottom: "10px"
+                    marginBottom: "5px"
                 }}
             >Lottery</h2>
             <h2
                 style={{
                     color: "white",
                     fontSize: "32px",
-                    marginBottom: "10px"
+                    marginBottom: "5px"
                 }}
             >$500</h2>
             <h2
                 style={{
                     color: "grey",
                     fontSize: "16px",
-                    marginBottom: "30px"
                 }}
             >100 TON</h2>
         </div>
