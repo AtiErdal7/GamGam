@@ -11,7 +11,8 @@ const BoostPage = () => {
                 backgroundColor:"grey",
                 marginTop:"100px",
                 width: "150px",
-                height:"70px"
+                height:"70px",
+                color: "gold"
             }}>Energy Fill</button>
         </div>
     );

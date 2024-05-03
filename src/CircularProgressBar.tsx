@@ -9,6 +9,7 @@ let initialTime = 1;
 let increaseTime = 120;
 let yellowSectorSize = 8;
 let greenSectorSize = 14;
+let defaultIncrease = 1;
 let yellowIncrease = 2;
 let greenIncrease = 3;
 let increaseAmount = 0;
@@ -186,15 +187,19 @@ const CircularProgress = () => {
                 increaseAmount = yellowIncrease
                 setMessageColor("gold");
             }
-            setShowMessage(true)
-            setTimeout(() => setShowMessage(false), 1000);
-
         } else {
+            clickAmount += defaultIncrease;
+            increaseAmount = defaultIncrease
+            setMessageColor("white");
             setSpeed(1);
             setStreak(0);
             yellowSectorSize =8;
             greenSectorSize =14;
         }
+
+        setShowMessage(true)
+        setTimeout(() => setShowMessage(false), 1000);
+
 
 
         setIndicatorAngle(Math.random() * 360);
