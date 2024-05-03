@@ -361,7 +361,7 @@ button:focus, input:focus, select:focus, textarea:focus {
   width:87vw;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   cursor: grab;
@@ -378,6 +378,7 @@ button:focus, input:focus, select:focus, textarea:focus {
   font-size: 24px;
   border-radius: 4%;
   border: 10px solid #212121;
+  background-color: black;
 }
 .scroll-container:active {
   cursor: grabbing;  /* Changes cursor during dragging */

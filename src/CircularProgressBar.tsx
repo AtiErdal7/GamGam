@@ -92,18 +92,20 @@ const CircularProgress = () => {
         } else if (!isActive && time !== 0) {
             clearInterval(interval);
         }
-        else if (isActive  && time === 0){
+        else if (isActive && time === 0){
             clearInterval(interval);
             let button = document.getElementById('clickButton');
-            // @ts-ignore
-            button.removeAttribute("disabled");
+            if (energy>0){
+                // @ts-ignore
+                button.removeAttribute("disabled");
+            }
             resetTimer();
         }
 
         return () => {
             clearInterval(interval);
         }
-    }, [isActive, time]);
+    }, [energy, isActive, time]);
 
     //energy system
     useEffect(() => {
@@ -120,17 +122,26 @@ const CircularProgress = () => {
                 setIsEnergyFull(true);
             setEnergyTime(increaseTime)
         }
+        
+        if (energy > 0 && !isActive){
+            let button = document.getElementById('clickButton');
+            // @ts-ignore
+            button.removeAttribute("disabled");
+        }
 
         return () => {
             clearInterval(energyTInterval);
         }
-    },[isEnergyFull,energyTime]);
+    },[isEnergyFull, energyTime, energy, isActive]);
 
     const formatTime = () => {
         if (isActive){
             const minutes = Math.floor(time / 60);
             const seconds = `0${time % 60}`.slice(-2);
             return `${minutes}:${seconds} to next tap`;
+        }
+        else if (energyRemains === 0){
+            return "Not enough energy"
         }
         else{
             return "Tap to earn"

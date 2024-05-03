@@ -5,7 +5,7 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  background-image: url("/src/images/bg.png");
+  background-color: black;
 }
 
 button:focus, input:focus, select:focus, textarea:focus {

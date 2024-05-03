@@ -74,7 +74,7 @@ const ProfileDetails = () => {
                     paddingLeft: 10,
                     gridArea: "third-row"
                 }}>
-                    <ScrollContainerHorizontal height={window.innerHeight/100*67}></ScrollContainerHorizontal>
+                    <ScrollContainerHorizontal height={window.innerHeight/100*60}></ScrollContainerHorizontal>
                 </div>
 
 
