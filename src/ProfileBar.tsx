@@ -1,7 +1,16 @@
 import React from 'react';
 import {NavLink} from "react-router-dom";
 
+let nick = "Guest";
+
 function ProfileBar() {
+
+    // @ts-ignore
+    const nickname = JSON.parse(localStorage.getItem('nickname'));
+    if (nickname !== null){
+        nick = nickname;
+    }
+
     return (
         <div className="profileBar">
             <NavLink to={"/profile"} className="profile-pic"></NavLink>
@@ -17,9 +26,8 @@ function ProfileBar() {
                 <h2 style={{
                     fontSize: "16px",
                     color: "white"
-                }}>atierdal</h2>
+                }}>{nick}</h2>
             </div>
-
         </div>
     );
 }
