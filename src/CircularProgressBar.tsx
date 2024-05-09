@@ -1,7 +1,19 @@
 import React, {useEffect, useState} from 'react';
+import {NavLink} from "react-router-dom";
 let clickAmount = 0;
 let energyLimit = 100;
 let energyRemains = 100;
+let increaseAreaBoost = 0;
+let speedReducedBoost = 0;
+let multiplierBoost = 0;
+let useEffectCalled = false;
+let areaGotBigger = false;
+let speedReduced = false;
+let multiplierActive = false;
+
+let slowIconImage: string;
+let areaIconImage: string;
+let multiplierIconImage: string;
 
 let interval: any = null
 let energyTInterval: any = null;
@@ -34,20 +46,7 @@ const CircularProgress = () => {
     const centerX = size / 2;
     const centerY = size / 2;
 
-    // @ts-ignore
-    const savedTickets = JSON.parse(localStorage.getItem('myTickets'));
-    if (savedTickets !== null){
-        clickAmount = savedTickets;
-    }
-    // @ts-ignore
-    const energyLeft = JSON.parse(localStorage.getItem('energyLeft'));
-    if (energyLeft !== null){
-        energyRemains = energyLeft;
-
-        if (energyRemains > 100){
-            energyRemains = 100;
-        }
-    }
+    const threshold = 10000000;
 
     const [number,setClickAmount] = useState(clickAmount);
     const [energy,setEnergyAmount] = useState(energyRemains);
@@ -68,6 +67,84 @@ const CircularProgress = () => {
         alignItems: 'center',
         cursor: 'pointer'
     };
+    useEffect(() => {
+        // @ts-ignore
+        const savedTickets = JSON.parse(localStorage.getItem('myTickets'));
+        if (savedTickets !== null){
+            clickAmount = savedTickets;
+        }
+        // @ts-ignore
+        const energyLeft = JSON.parse(localStorage.getItem('energyLeft'));
+        if (energyLeft !== null){
+            energyRemains = energyLeft;
+        }
+        // @ts-ignore
+        const timeLastSaved: Date = JSON.parse(localStorage.getItem("energyTimeLastDropped"));
+        if (timeLastSaved !== null){
+            const now = new Date();
+            const savedTime = new Date(timeLastSaved);
+            const timeDifference = Math.floor((now.getTime() - savedTime.getTime())/1000)
+            if (Math.floor((timeDifference)/120) + energyRemains > 100){
+                energyRemains = 100;
+                setEnergyTime(increaseTime)
+                setIsEnergyFull(true);
+            }
+            else{
+                energyRemains = Math.floor(timeDifference/120) + energyRemains;
+                setEnergyTime(time =>timeDifference%120)
+            }
+        }
+        // @ts-ignore
+        const increaseArea: number = JSON.parse(localStorage.getItem('increaseArea'));{
+            if (increaseArea > 0){
+                increaseAreaBoost = increaseArea;
+                areaGotBigger = true;
+            }
+        }
+        // @ts-ignore
+        const speedReduce: number = JSON.parse(localStorage.getItem('reduceSpeed'));{
+            if (speedReduce > 0){
+                speedReduced = true;
+                speedReducedBoost = speedReduce;
+                setSpeed(speed => speed-(speed/4));
+            }
+        }
+        // @ts-ignore
+        const multiplier: number = JSON.parse(localStorage.getItem('multiplierBoost'));{
+            if (multiplier > 0){
+                multiplierActive = true;
+                multiplierBoost = multiplier;
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (speedReduced)
+            slowIconImage = "boostIcon timeSlowIconA"
+        else
+            slowIconImage = "boostIcon timeSlowIcon"
+
+        if (areaGotBigger)
+            areaIconImage = "boostIcon areaActiveIconA"
+        else
+            areaIconImage = "boostIcon areaActiveIcon"
+
+        if (multiplierActive)
+            multiplierIconImage = "boostIcon multiplierActiveIconA"
+        else
+            multiplierIconImage = "boostIcon multiplierActiveIcon"
+
+    }, [speedReduced,areaGotBigger,multiplierActive]);
+
+    useEffect(() => {
+        if (!useEffectCalled){
+            if (increaseAreaBoost > 0){
+                greenSectorSize = greenSectorSize+greenSectorSize;
+                yellowSectorSize = yellowSectorSize+yellowSectorSize;
+                useEffectCalled = true;
+            }
+        }
+    }, []);
 
     //circle the ball
     useEffect(() => {
@@ -113,6 +190,9 @@ const CircularProgress = () => {
         if (!isEnergyFull && energyTime > 0){
             energyTInterval = setInterval(() => {
                 setEnergyTime((time) => time - 1);
+                localStorage.setItem('energyIncreaseRemain', JSON.stringify(energyTime))
+                const now: Date = new Date();
+                localStorage.setItem('energyTimeLastDropped', JSON.stringify(now.toUTCString()))
             }, 1000);
         }
         else if (!isEnergyFull && energyTime === 0){
@@ -122,6 +202,7 @@ const CircularProgress = () => {
             if (energyRemains === 100)
                 setIsEnergyFull(true);
             setEnergyTime(increaseTime)
+            localStorage.setItem('energyIncreaseRemain', JSON.stringify(increaseTime))
         }
         
         if (energy > 0 && !isActive){
@@ -133,7 +214,7 @@ const CircularProgress = () => {
         return () => {
             clearInterval(energyTInterval);
         }
-    },[isEnergyFull, energyTime, energy, isActive]);
+    },[isEnergyFull, energyTime, energy, isActive, time]);
 
     const formatTime = () => {
         if (isActive){
@@ -160,6 +241,22 @@ const CircularProgress = () => {
         }
     }
 
+    function SetTextColor(increase:number , color:string) {
+        const multiplier = multiplierActive ? 2 : 1;
+        clickAmount += increase * multiplier;
+        increaseAmount = increase * multiplier;
+
+        if (multiplierActive) {
+            multiplierBoost--;
+            localStorage.setItem('multiplierBoost', JSON.stringify(multiplierBoost));
+            if (multiplierBoost === 0) {
+                multiplierActive = false;
+            }
+        }
+
+        setMessageColor(color);
+    }
+
     const resetTimer = () => {
         setTime(initialTime);
         setIsActive(false);
@@ -169,51 +266,82 @@ const CircularProgress = () => {
         const inYellow = ((progress <= indicatorAngle + (2*yellowSectorSize)+greenSectorSize && progress >= indicatorAngle + yellowSectorSize+greenSectorSize) || (progress >= indicatorAngle &&progress <= indicatorAngle + yellowSectorSize));
 
         if (inGreen || inYellow) {
-            if (yellowSectorSize > 3)
-                yellowSectorSize -=1;
-            if (greenSectorSize > 1)
-                greenSectorSize -=1;
-            if (speed < 4)
-                setSpeed(speed => speed+0.6);
+            if (increaseAreaBoost > 0) {
+                if (yellowSectorSize > 6)
+                    yellowSectorSize -=2;
+                if (greenSectorSize > 2)
+                    greenSectorSize -=2;
+            }
+            else{
+                if (yellowSectorSize > 3)
+                    yellowSectorSize -=1;
+                if (greenSectorSize > 1)
+                    greenSectorSize -=1;
+            }
+
+            if (speed < 4){
+                if (speedReduced && speedReducedBoost > 0)
+                    setSpeed(speed => speed + 0.45)
+                else
+                    setSpeed(speed => speed+0.6);
+            }
 
             setStreak(streak => streak + 1);
-            if (inGreen){
-                clickAmount += greenIncrease;
-                increaseAmount = greenIncrease
-                setMessageColor("green");
-            }
-            else if (inYellow){
-                clickAmount += yellowIncrease;
-                increaseAmount = yellowIncrease
-                setMessageColor("gold");
-            }
-        } else {
-            clickAmount += defaultIncrease;
-            increaseAmount = defaultIncrease
-            setMessageColor("white");
-            setSpeed(1);
-            setStreak(0);
-            yellowSectorSize =8;
-            greenSectorSize =14;
-        }
+            if (inGreen)
+                SetTextColor(greenIncrease,"green")
+            else if (inYellow)
+                SetTextColor(yellowIncrease,"gold")
 
+        } else {
+            SetTextColor(defaultIncrease,"white")
+            if (speedReduced)
+                setSpeed(0.75)
+            else
+                setSpeed(1);
+
+            setStreak(0);
+            if (increaseAreaBoost > 0){
+                yellowSectorSize =16;
+                greenSectorSize =28;
+            }
+            else {
+                yellowSectorSize =8;
+                greenSectorSize =14;
+            }
+
+        }
         setShowMessage(true)
         setTimeout(() => setShowMessage(false), 1000);
-
-
-
         setIndicatorAngle(Math.random() * 360);
         setIsActive(true);
-        let button = document.getElementById('clickButton');
-        energyRemains--
-        // @ts-ignore
-        button.setAttribute("disabled","true");
         setIsEnergyFull(false);
         setEnergyAmount(energyRemains);
         setProgress(prevProgress => Math.min(prevProgress + 1));
         setClickAmount(clickAmount);
+        if (speedReduced && speedReducedBoost > 0) {
+            speedReducedBoost--;
+            localStorage.setItem('reduceSpeed', JSON.stringify(speedReducedBoost));
+            if (speedReducedBoost === 0){
+                setSpeed(speed => speed + speed*0.25);
+                speedReduced = false;
+            }
+        }
+        if (increaseAreaBoost > 0){
+            increaseAreaBoost--;
+            localStorage.setItem('increaseArea',JSON.stringify(increaseAreaBoost));
+            if (areaGotBigger && increaseAreaBoost === 0){
+                yellowSectorSize = yellowSectorSize /2;
+                greenSectorSize = greenSectorSize /2;
+                areaGotBigger = false;
+            }
+        }
         localStorage.setItem('myTickets',JSON.stringify(clickAmount))
         localStorage.setItem('energyLeft',JSON.stringify(energyRemains))
+
+        let button = document.getElementById('clickButton');
+        energyRemains--
+        // @ts-ignore
+        button.setAttribute("disabled","true");
     }
     const calculateSectorPath = (startAngle: number, endAngle: number): string => {
         const start = polarToCartesian(radiusForZone, startAngle);
@@ -270,11 +398,9 @@ const CircularProgress = () => {
                     <h2 style={{
                         fontSize: '20px',
                         color: 'white'
-                    }}>5.6/10M</h2>
+                    }}>5.6/{threshold/1000000}M</h2>
                 </div>
             </div>
-
-
             <div style={{
                 cursor: 'pointer',
                 width: '100%',
@@ -295,7 +421,8 @@ const CircularProgress = () => {
                             cy={centerY}
 
                         />
-                        <path d={calculateSectorPath(indicatorAngle, indicatorAngle + yellowSectorSize)} fill="#00FF9E" className="glow-path"/>
+                        <path d={calculateSectorPath(indicatorAngle, indicatorAngle + yellowSectorSize)} fill="#00FF9E"
+                              className="glow-path"/>
                         <path
                             d={calculateSectorPath(indicatorAngle + yellowSectorSize, indicatorAngle + yellowSectorSize + greenSectorSize)}
                             fill=" #1A9FDF" className="glow-path"/>
@@ -305,7 +432,7 @@ const CircularProgress = () => {
 
                         <circle
                             strokeWidth={strokeWidth}
-                            r={radius-5}
+                            r={radius - 5}
                             cx={centerX}
                             cy={centerY}
                         />
@@ -343,6 +470,15 @@ const CircularProgress = () => {
                 left: 0
             }}>
             </button>
+            <div style={{
+                display: 'flex',
+                justifyContent: "center",
+                alignItems:"center"
+            }}>
+                <div className={slowIconImage} ></div>
+                <div className={areaIconImage}></div>
+                <div className={multiplierIconImage}></div>
+            </div>
             <h2 style={{
                 paddingTop:10
             }}>Streak: {streak}</h2>

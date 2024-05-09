@@ -132,7 +132,30 @@ button:focus, input:focus, select:focus, textarea:focus {
 }.profile-link.active{
   background-image: url('/src/images/ProfileActive.png');
 }
-
+.boostIcon{
+  background-repeat: no-repeat;
+  height: 36px;
+  width: 36px;
+  background-size: cover;
+}
+.timeSlowIcon{
+  background-image: url('/src/images/TimeSlowDeactive.png');
+}
+.areaActiveIcon{
+  background-image: url('/src/images/AreaExpandDeactive.png');
+}
+.multiplierActiveIcon{
+  background-image: url('/src/images/MultiplierDeactive.png');
+}
+.timeSlowIconA{
+  background-image: url('/src/images/TimeSlowActive.png');
+}
+.areaActiveIconA{
+  background-image: url('/src/images/AreaExpandActive.png');
+}
+.multiplierActiveIconA{
+  background-image: url('/src/images/MultiplierActive.png');
+}
 .profileBar{
   position: fixed;
   left: 50%;
