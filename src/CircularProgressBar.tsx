@@ -29,7 +29,7 @@ let increaseAmount = 0;
 // @ts-ignore
 const CircularProgress = () => {
 
-    const size = 220;
+    const size = 190;
     const strokeWidth = 10;
     const circleOneStroke = "grey";
 
@@ -370,13 +370,12 @@ const CircularProgress = () => {
             <h2
                 style={{
                     color:"white",
-                    paddingTop: '30px'
+                    paddingTop: '20px'
                 }}>Tap Remains</h2>
             <h2 style={{
                 color: "white",
-                fontSize: "48px"
+                fontSize: "42px"
             }}
-
             >{energyRemains + "/" + energyLimit}
                 <div style={containerStyle}>
                     <div style={{width: '50%'}}>
@@ -404,7 +403,7 @@ const CircularProgress = () => {
             <div style={{
                 cursor: 'pointer',
                 width: '100%',
-                height: '30vh',
+                height: '28vh',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center'
@@ -471,6 +470,7 @@ const CircularProgress = () => {
             }}>
             </button>
             <div style={{
+                paddingTop:"10px",
                 display: 'flex',
                 justifyContent: "center",
                 alignItems:"center"
@@ -480,11 +480,11 @@ const CircularProgress = () => {
                 <div className={multiplierIconImage}></div>
             </div>
             <h2 style={{
-                paddingTop:10
+                paddingTop:6
             }}>Streak: {streak}</h2>
             <h2 style={{
                 color: "white",
-                paddingTop:10
+                paddingTop:6
             }}>Tickets: <text>{clickAmount}</text> {showMessage && <text style={{color: messageColor}}>+{increaseAmount}</text>}</h2>
         </div>
     );
