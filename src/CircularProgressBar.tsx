@@ -50,6 +50,7 @@ const CircularProgress = () => {
 
     const [number,setClickAmount] = useState(clickAmount);
     const [energy,setEnergyAmount] = useState(energyRemains);
+    const [lotteryTicket , setLotteryTicket] = useState(0);
     const [indicatorAngle, setIndicatorAngle] = useState(0);
     const [time, setTime] = useState(initialTime);
     const [speed, setSpeed] = useState(1);
@@ -69,14 +70,24 @@ const CircularProgress = () => {
     };
     useEffect(() => {
         // @ts-ignore
-        const savedTickets = JSON.parse(localStorage.getItem('myTickets'));
+        const savedTickets = JSON.parse(localStorage.getItem('clickAmount'));
         if (savedTickets !== null){
             clickAmount = savedTickets;
+            setClickAmount(clickAmount);
+        }
+        // @ts-ignore
+        const lotteryTickets = JSON.parse(localStorage.getItem('lotteryTicket'));
+        if (lotteryTickets !== null){
+            setLotteryTicket(lotteryTickets);
+        }
+        else{
+            setLotteryTicket(0);
         }
         // @ts-ignore
         const energyLeft = JSON.parse(localStorage.getItem('energyLeft'));
         if (energyLeft !== null){
             energyRemains = energyLeft;
+            setEnergyAmount(energyRemains)
         }
         // @ts-ignore
         const timeLastSaved: Date = JSON.parse(localStorage.getItem("energyTimeLastDropped"));
@@ -257,6 +268,14 @@ const CircularProgress = () => {
         setMessageColor(color);
     }
 
+    const ExchangeGamGamcy = () => {
+        const lottery = Math.floor(clickAmount / 10)+lotteryTicket;
+        setLotteryTicket(lottery);
+        setClickAmount(clickAmount%10);
+        localStorage.setItem('clickAmount', JSON.stringify(clickAmount%10));
+        localStorage.setItem('lotteryTicket', JSON.stringify(lottery));
+    }
+
     const resetTimer = () => {
         setTime(initialTime);
         setIsActive(false);
@@ -335,7 +354,7 @@ const CircularProgress = () => {
                 areaGotBigger = false;
             }
         }
-        localStorage.setItem('myTickets',JSON.stringify(clickAmount))
+        localStorage.setItem('clickAmount',JSON.stringify(clickAmount))
         localStorage.setItem('energyLeft',JSON.stringify(energyRemains))
 
         let button = document.getElementById('clickButton');
@@ -456,7 +475,7 @@ const CircularProgress = () => {
             </div>
             <button id="clickButton" onClick={handleClick} style={{
                 width: '100vw',
-                height: '90vh',
+                height: '75vh',
                 margin: 0,
                 border: 'none',
                 backgroundColor: 'transparent',
@@ -484,8 +503,21 @@ const CircularProgress = () => {
             }}>Streak: {streak}</h2>
             <h2 style={{
                 color: "white",
-                paddingTop:6
-            }}>Tickets: <text>{clickAmount}</text> {showMessage && <text style={{color: messageColor}}>+{increaseAmount}</text>}</h2>
+            }}>GamGamcy: <text>{number}</text> {showMessage && <text style={{color: messageColor}}>+{increaseAmount}</text>}</h2>
+            <div>
+                <h2>
+                    GamGamket: <text>{lotteryTicket}</text>
+                </h2>
+                <button onClick={ExchangeGamGamcy} style={{
+                    width: "100px",
+                    height: "30px",
+                    borderRadius: 5,
+                    backgroundColor: "grey",
+                    color:"gold",
+                    marginTop: 3
+                }}>{"Exchange"}</button>
+            </div>
+
         </div>
     );
 };

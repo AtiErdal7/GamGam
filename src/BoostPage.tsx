@@ -19,14 +19,17 @@ const BoostPage = () => {
 
     const increaseArea = () => {
         enableBoost("increaseArea","increaseAreaB","increaseAreaCounter")
+        setAreaTime(increaseAreaCountdown);
     }
 
     const reduceSpeed = () => {
         enableBoost("reduceSpeed","speedReduceB","reduceSpeedCounter")
+        setSpeedTime(3600)
     }
 
     const multiplier = () => {
         enableBoost("multiplierBoost","multiplierB","multiplierCounter")
+        setMultiTime(3600)
     }
 
     function enableBoost(boostName:string, buttonId:string,timeId:string){
@@ -125,7 +128,7 @@ const BoostPage = () => {
 
         }
         return () => clearInterval(countdownIntArea)
-    }, [increaseAreaCountdown,areaTime]);
+    }, [areaTime]);
 
     useEffect(() => {
         if (reduceSpeedCountdown > 0){
@@ -136,7 +139,7 @@ const BoostPage = () => {
         }
 
         return () => clearInterval(countdownIntSpeed)
-    }, [reduceSpeedCountdown,speedTime]);
+    }, [speedTime]);
     useEffect(() => {
 
         if (multiplierCountdown > 0){

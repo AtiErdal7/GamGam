@@ -194,7 +194,7 @@ button:focus, input:focus, select:focus, textarea:focus {
 .rows-container {
   margin-left: 10px;
   width: 415px;
-  height: 128px;
+  height: 114px;
   grid-area: first-row-right;
 }
 
@@ -214,10 +214,10 @@ button:focus, input:focus, select:focus, textarea:focus {
 
 }
 .profile-pic-big{
-  width: 128px;
-  height: 128px;
+  width: 114px;
+  height: 114px;
   grid-area: first-row-left;
-  background-size: 128px;
+  background-size: 114px;
   background-color: #2F2F2F;
   background-image: url('/src/images/ProfilePic.png');
   border-radius: 15%;
@@ -250,7 +250,7 @@ button:focus, input:focus, select:focus, textarea:focus {
   justify-content: space-between;
   align-items: center;
   width: 220px;
-  height: 28px;
+  height: 24px;
   background-color: #333333;
   border-radius: 5px;
 }
@@ -266,7 +266,7 @@ button:focus, input:focus, select:focus, textarea:focus {
 }
 
 .scroll-container-horizontal {
-  padding-top: 20px;
+  padding-top: 10px;
   scrollbar-width: none;
   margin-left: 10px;
   width: 83vw;
@@ -283,7 +283,6 @@ button:focus, input:focus, select:focus, textarea:focus {
 
 .indicator-container {
   text-align: center;
-  padding-top: 10px;
 }
 
 .dot {
@@ -370,32 +369,27 @@ button:focus, input:focus, select:focus, textarea:focus {
 
 .x-boost-text{
   grid-area: second-row;
-  margin-top: 16px;
+  margin-top: 8px;
+  margin-bottom: 5px;
   margin-left: 28px;
   width: 320px;
-  height: 28px;
+  height: 24px;
   background-color: #333333;
   border-radius: 5px;
 }
 
 .vertical-scroll-profile{
   scrollbar-width: none;
-  margin-top: 10px;
   width:87vw;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  cursor: grab;
 }
 .item2 {
-  margin-top: 10px;
+  margin-bottom: 10px;
   color: dimgrey;
   flex: 0 0 80vw;
   margin-left: 5px;
   height: 16vh;
-  scroll-snap-align: start;
   justify-content: center;
   align-items: center;
   font-size: 24px;

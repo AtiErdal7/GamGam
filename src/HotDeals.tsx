@@ -26,7 +26,6 @@ const HotDeals = () => {
             <ScrollContainerHorizontal></ScrollContainerHorizontal>
             <h1 style={{
                 textAlign: "left",
-                paddingTop: 20,
                 fontSize: 16,
                 color: "white"
             }}>Quest Hub</h1>

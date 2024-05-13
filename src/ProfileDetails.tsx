@@ -93,7 +93,7 @@ const ProfileDetails = () => {
                     <text style={{
                         fontSize: "12px",
                         marginLeft: "8px",
-                        paddingTop: "6px",
+                        paddingTop: "4px",
                         textAlign: "center",
                         display: "flex",
                         color: "white",
