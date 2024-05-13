@@ -7,7 +7,7 @@ const ScrollContainerVertical = ({height}) => {
 
     const handleScroll = (direction: 'up' | 'down') => {
         if (scrollViewRef.current) {
-            const scrollAmount = 149; // This should be the height of one item
+            const scrollAmount = 150; // This should be the height of one item
             scrollViewRef.current.scrollTop += direction === 'down' ? scrollAmount : -scrollAmount;
         }
     };

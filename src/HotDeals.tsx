@@ -34,7 +34,7 @@ const HotDeals = () => {
                 fontSize: 14,
             }}>You can check your available quests here!</h2>
             <div>
-                <ScrollContainerVertical height={window.innerHeight/100*40}></ScrollContainerVertical>
+                <ScrollContainerVertical height={window.innerHeight/100*38}></ScrollContainerVertical>
             </div>
         </div>
     );

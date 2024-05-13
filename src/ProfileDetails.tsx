@@ -103,7 +103,7 @@ const ProfileDetails = () => {
                     paddingLeft: 10,
                     gridArea: "third-row"
                 }}>
-                    <ScrollContainerHorizontal height={window.innerHeight/100*60}></ScrollContainerHorizontal>
+                    <ScrollContainerHorizontal height={window.innerHeight/100*58}></ScrollContainerHorizontal>
                 </div>
                 <NameEditor isOpen={isNameEditorOpen} close={() => setNameEditorOpen(false)}>
                     <p>You can change your name here.</p>

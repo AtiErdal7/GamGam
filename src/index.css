@@ -389,7 +389,7 @@ button:focus, input:focus, select:focus, textarea:focus {
   color: dimgrey;
   flex: 0 0 80vw;
   margin-left: 5px;
-  height: 16vh;
+  height: 120px;
   justify-content: center;
   align-items: center;
   font-size: 24px;
