@@ -1,5 +1,6 @@
 import { NavLink} from "react-router-dom";
 import React, {useEffect} from "react";
+import {TonConnectButton} from "@tonconnect/ui-react";
 
 const Navbar = () => {
     useEffect(() => {
@@ -9,7 +10,7 @@ const Navbar = () => {
 
     return(
         <nav className="navbar">
-            <NavLink to={"/wallet"} className="navbarButtons wallet-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'" >Wallet</NavLink>
+            <TonConnectButton className="navbarButtons wallet-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'" ></TonConnectButton>
             <NavLink to={"/boosts"} className="navbarButtons boost-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Boost</NavLink>
             <NavLink to={"/"} className="navbarButtons play-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Play</NavLink>
             <NavLink to={"/deals"} className="navbarButtons hotdeals-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Deals</NavLink>

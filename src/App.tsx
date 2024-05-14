@@ -7,6 +7,7 @@ import ProfilePage from "./ProfilePage";
 import {HashRouter as Router, Route, Routes} from 'react-router-dom';
 import HotDeals from "./HotDeals";
 import BoostPage from "./BoostPage";
+import {TonConnectUIProvider} from "@tonconnect/ui-react";
 
 function App() {
     useEffect(() => {
@@ -14,19 +15,22 @@ function App() {
 
     }, []);
   return (
-      <Router>
-      <div className="App">
-        <div className="content">
-            <Routes>
-                <Route path="/" element={<ClickPage/>}></Route>
-                <Route path="/profile" element={<ProfilePage/>}></Route>
-                <Route path="/deals" element={<HotDeals></HotDeals>}></Route>
-                <Route path="/boosts" element={<BoostPage></BoostPage>}></Route>
-            </Routes>
-        </div>
-          <Navbar></Navbar>
-      </div>
-      </Router>
+      <TonConnectUIProvider manifestUrl="https://playable.marketing/tonconnect-manifest.json">
+          <Router>
+              <div className="App">
+                  <div className="content">
+                      <Routes>
+                          <Route path="/" element={<ClickPage/>}></Route>
+                          <Route path="/profile" element={<ProfilePage/>}></Route>
+                          <Route path="/deals" element={<HotDeals></HotDeals>}></Route>
+                          <Route path="/boosts" element={<BoostPage></BoostPage>}></Route>
+                      </Routes>
+                  </div>
+                  <Navbar></Navbar>
+              </div>
+          </Router>
+      </TonConnectUIProvider>
+
   );
 }
 export default App;
