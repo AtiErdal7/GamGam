@@ -15,7 +15,7 @@ function App() {
 
     }, []);
   return (
-      <TonConnectUIProvider manifestUrl="https://playable.marketing/tonconnect-manifest.json">
+      <TonConnectUIProvider manifestUrl="https://t.me/GamGamAppBot/GamGamApp/tonconnect-manifest.json">
           <Router>
               <div className="App">
                   <div className="content">
