@@ -19,7 +19,7 @@ const BoostPage = () => {
 
     const increaseArea = () => {
         enableBoost("increaseArea","increaseAreaB","increaseAreaCounter")
-        setAreaTime(increaseAreaCountdown);
+        setAreaTime(3600);
     }
 
     const reduceSpeed = () => {
@@ -82,12 +82,13 @@ const BoostPage = () => {
             multiplierCountdown = Math.floor((savedTime.getTime() - now.getTime())/1000)
             setMultiTime(multiplierCountdown)
         }
-
-        checkClickable(increaseAreaCountdown,"increaseAreaB",);
-        checkClickable(reduceSpeedCountdown,"speedReduceB");
-        checkClickable(multiplierCountdown,"multiplierB");
     }, []);
 
+    useEffect(() => {
+        checkClickable(areaTime,"increaseAreaB",);
+        checkClickable(speedTime,"speedReduceB");
+        checkClickable(multiTime,"multiplierB");
+    }, [areaTime, multiTime, speedTime]);
 
     const counterIncArea = () => {
         if (areaTime > 0){
@@ -121,7 +122,7 @@ const BoostPage = () => {
     }
 
     useEffect(() => {
-        if (increaseAreaCountdown > 0){
+        if (areaTime > 0){
             countdownIntArea = setInterval(() => {
                 setAreaTime(areaTime => areaTime-1);
             }, 1000);
@@ -131,25 +132,23 @@ const BoostPage = () => {
     }, [areaTime]);
 
     useEffect(() => {
-        if (reduceSpeedCountdown > 0){
+        if (speedTime > 0){
             countdownIntSpeed = setInterval(() => {
                 setSpeedTime(speedTime => speedTime-1)
             }, 1000);
 
         }
-
         return () => clearInterval(countdownIntSpeed)
     }, [speedTime]);
     useEffect(() => {
-
-        if (multiplierCountdown > 0){
+        if (multiTime > 0){
             countdownIntMulti = setInterval(() => {
                 setMultiTime(multiTime => multiTime-1);
             }, 1000);
 
         }
         return () => clearInterval(countdownIntMulti)
-    }, [multiplierCountdown,multiTime]);
+    }, [multiTime]);
 
     return (
         <div>
