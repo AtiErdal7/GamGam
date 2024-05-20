@@ -536,7 +536,7 @@ const CircularProgress = () => {
             <button id="clickButton" onClick={handleClick} style={{
                 width: '100vw',
                 height: '72vh',
-                margin: 0,
+                marginTop: 70,
                 border: 'none',
                 backgroundColor: 'transparent',
                 color: 'transparent', // In case there's text you want to hide

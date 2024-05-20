@@ -37,7 +37,7 @@ const MembershipPage = () => {
                             color: "gold",
                             marginBottom: 10
                         }}>Periodically Earned Rewards</h3>
-                        <ScrollContainerVertical height={window.innerHeight/100*60} itemsList = {itemsList}></ScrollContainerVertical>
+                        <ScrollContainerVertical height={window.innerHeight/100*59} itemsList = {itemsList}></ScrollContainerVertical>
                     </div>
                     <button onClick={membershipSet} style={{
                         width: "60px",
