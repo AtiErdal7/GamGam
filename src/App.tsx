@@ -8,6 +8,7 @@ import {HashRouter as Router, Route, Routes} from 'react-router-dom';
 import HotDeals from "./HotDeals";
 import BoostPage from "./BoostPage";
 import {TonConnectUIProvider} from "@tonconnect/ui-react";
+import MembershipPage from "./MembershipPage";
 
 function App() {
     useEffect(() => {
@@ -24,6 +25,7 @@ function App() {
                           <Route path="/profile" element={<ProfilePage/>}></Route>
                           <Route path="/deals" element={<HotDeals></HotDeals>}></Route>
                           <Route path="/boosts" element={<BoostPage></BoostPage>}></Route>
+                          <Route path="/membership" element={<MembershipPage></MembershipPage>}></Route>
                       </Routes>
                   </div>
                   <Navbar></Navbar>

@@ -2,6 +2,7 @@ import React from 'react';
 import {NavLink} from "react-router-dom";
 
 let nick = "Guest";
+let membership = "membership"
 
 function ProfileBar() {
 
@@ -10,24 +11,39 @@ function ProfileBar() {
     if (nickname !== null){
         nick = nickname;
     }
+    // @ts-ignore
+    const membershipStatus = JSON.parse(localStorage.getItem('membershipStatus'));
+    if (membershipStatus === "Premium" ){
+        membership = "membership mPremium"
+    }
+    else{
+        membership = "membership mBasic"
+    }
+
 
     return (
         <div className="profileBar">
-            <NavLink to={"/profile"} className="profile-pic"></NavLink>
             <div style={{
-                textAlign: "left",
-                alignItems: "center",
-                justifyContent: "left",
-                paddingLeft: "15px"
+                display: 'flex',
             }}>
-                <h2 style={{
-                fontSize: "12px",
-            }}>Welcome back</h2>
-                <h2 style={{
-                    fontSize: "16px",
-                    color: "white"
-                }}>{nick}</h2>
+                <NavLink to={"/profile"} className="profile-pic"></NavLink>
+                <div style={{
+                    textAlign: "left",
+                    alignItems: "center",
+                    justifyContent: "left",
+                    paddingLeft: "15px",
+                    marginTop: "8px"
+                }}>
+                    <h2 style={{
+                        fontSize: "12px",
+                    }}>Welcome back</h2>
+                    <h2 style={{
+                        fontSize: "16px",
+                        color: "white"
+                    }}>{nick}</h2>
+                </div>
             </div>
+            <NavLink to={"/membership"} className={membership}></NavLink>
         </div>
     );
 }
