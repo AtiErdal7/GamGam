@@ -32,7 +32,7 @@ button:focus, input:focus, select:focus, textarea:focus {
   display: flex;
   justify-content: space-around;
   gap: 8px;
-  padding: 20px;
+  padding: 10px;
 }
 .gameArea {
   display: flex;

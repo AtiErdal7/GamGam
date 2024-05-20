@@ -1,6 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {NavLink} from "react-router-dom";
-let clickAmount = 0;
+import {
+    useIsConnectionRestored,
+    useTonAddress,
+    useTonConnectUI,
+} from "@tonconnect/ui-react";
+import RewardCollectPopup from "./RewardCollectPopup";
+import ProfileBar from "./ProfileBar";
+let clickScore = 0;
 let energyLimit = 100;
 let energyRemains = 100;
 let increaseAreaBoost = 0;
@@ -10,6 +16,7 @@ let useEffectCalled = false;
 let areaGotBigger = false;
 let speedReduced = false;
 let multiplierActive = false;
+let vip = false;
 
 let slowIconImage: string;
 let areaIconImage: string;
@@ -17,7 +24,7 @@ let multiplierIconImage: string;
 
 let interval: any = null
 let energyTInterval: any = null;
-let initialTime = 1;
+let initialTime = 7;
 let increaseTime = 120;
 let yellowSectorSize = 8;
 let greenSectorSize = 14;
@@ -29,7 +36,7 @@ let increaseAmount = 0;
 // @ts-ignore
 const CircularProgress = () => {
 
-    const size = 190;
+    const size = 185;
     const strokeWidth = 10;
     const circleOneStroke = "grey";
 
@@ -48,11 +55,11 @@ const CircularProgress = () => {
 
     const threshold = 10000000;
 
-    const [number,setClickAmount] = useState(clickAmount);
+    const [clickS,setClickScore] = useState(clickScore);
     const [energy,setEnergyAmount] = useState(energyRemains);
     const [lotteryTicket , setLotteryTicket] = useState(0);
     const [indicatorAngle, setIndicatorAngle] = useState(0);
-    const [time, setTime] = useState(initialTime);
+    const [clickTime, setClickTime] = useState(initialTime);
     const [speed, setSpeed] = useState(1);
     const [streak, setStreak] = useState(0);
     const [showMessage, setShowMessage] = useState(false);
@@ -60,6 +67,7 @@ const CircularProgress = () => {
     const [energyTime, setEnergyTime] = useState(increaseTime);
     const [isActive, setIsActive] = useState(false);
     const [isEnergyFull, setIsEnergyFull] = useState(false);
+    const [isPopupOpen, setPopupOpen] = useState(false);
 
     const containerStyle = {
         width: '100%',
@@ -68,12 +76,33 @@ const CircularProgress = () => {
         alignItems: 'center',
         cursor: 'pointer'
     };
+
+    const [tonConnectUI] = useTonConnectUI();
+
+    tonConnectUI.setConnectRequestParameters({
+        state: 'loading'
+    });
+    useTonAddress();
+    useIsConnectionRestored();
+
+    function SetEnergyRemains(timePassed:number,maxEnergy:number){
+        if (Math.floor((timePassed)/120) + energyRemains > maxEnergy){
+            energyRemains = maxEnergy;
+            setEnergyTime(increaseTime)
+            setIsEnergyFull(true);
+        }
+        else{
+            energyRemains = Math.floor(timePassed/120) + energyRemains;
+            setEnergyTime(time =>120-timePassed%120)
+        }
+    }
+
     useEffect(() => {
         // @ts-ignore
         const savedTickets = JSON.parse(localStorage.getItem('clickAmount'));
         if (savedTickets !== null){
-            clickAmount = savedTickets;
-            setClickAmount(clickAmount);
+            clickScore = savedTickets;
+            setClickScore(clickScore);
         }
         // @ts-ignore
         const lotteryTickets = JSON.parse(localStorage.getItem('lotteryTicket'));
@@ -84,52 +113,72 @@ const CircularProgress = () => {
             setLotteryTicket(0);
         }
         // @ts-ignore
-        const energyLeft = JSON.parse(localStorage.getItem('energyLeft'));
+        const premium = localStorage.getItem('membershipStatus')
+
+        let energyLeft = 0
+        if (premium !== null){
+            // @ts-ignore
+            energyLeft = JSON.parse(localStorage.getItem('energyLeftVIP'));
+            vip = true;
+            initialTime = 1;
+            setClickTime(initialTime);
+            energyLimit = 500;
+        }
+        else{
+            // @ts-ignore
+            energyLeft = JSON.parse(localStorage.getItem('energyLeft'));
+            vip = false;
+            initialTime = 7;
+        }
         if (energyLeft !== null){
             energyRemains = energyLeft;
             setEnergyAmount(energyRemains)
         }
+
+        if (vip && energyLeft === null){
+            energyRemains = 500;
+            setEnergyAmount(energyRemains);
+        }
+
         // @ts-ignore
         const timeLastSaved: Date = JSON.parse(localStorage.getItem("energyTimeLastDropped"));
         if (timeLastSaved !== null){
             const now = new Date();
             const savedTime = new Date(timeLastSaved);
             const timeDifference = Math.floor((now.getTime() - savedTime.getTime())/1000)
-            if (Math.floor((timeDifference)/120) + energyRemains > 100){
-                energyRemains = 100;
-                setEnergyTime(increaseTime)
-                setIsEnergyFull(true);
+            if (!vip){
+                SetEnergyRemains(timeDifference,100)
             }
             else{
-                energyRemains = Math.floor(timeDifference/120) + energyRemains;
-                setEnergyTime(time =>timeDifference%120)
+                SetEnergyRemains(timeDifference,500)
             }
         }
         // @ts-ignore
-        const increaseArea: number = JSON.parse(localStorage.getItem('increaseArea'));{
-            if (increaseArea > 0){
-                increaseAreaBoost = increaseArea;
-                areaGotBigger = true;
-            }
+        const increaseArea: number = JSON.parse(localStorage.getItem('increaseArea'));
+        if (increaseArea > 0){
+            increaseAreaBoost = increaseArea;
+            areaGotBigger = true;
         }
+
         // @ts-ignore
-        const speedReduce: number = JSON.parse(localStorage.getItem('reduceSpeed'));{
-            if (speedReduce > 0){
-                speedReduced = true;
-                speedReducedBoost = speedReduce;
-                setSpeed(speed => speed-(speed/4));
-            }
+        const speedReduce: number = JSON.parse(localStorage.getItem('reduceSpeed'));
+        if (speedReduce > 0){
+            speedReduced = true;
+            speedReducedBoost = speedReduce;
+            setSpeed(speed => speed-(speed/4));
         }
+
         // @ts-ignore
-        const multiplier: number = JSON.parse(localStorage.getItem('multiplierBoost'));{
-            if (multiplier > 0){
-                multiplierActive = true;
-                multiplierBoost = multiplier;
-            }
+        const multiplier: number = JSON.parse(localStorage.getItem('multiplierBoost'));
+        if (multiplier > 0){
+            multiplierActive = true;
+            multiplierBoost = multiplier;
         }
+
+        CheckBoostIcons();
     }, []);
 
-    useEffect(() => {
+    function CheckBoostIcons() {
         if (speedReduced)
             slowIconImage = "boostIcon timeSlowIconA"
         else
@@ -145,7 +194,7 @@ const CircularProgress = () => {
         else
             multiplierIconImage = "boostIcon multiplierActiveIcon"
 
-    }, [speedReduced,areaGotBigger,multiplierActive]);
+    }
 
     useEffect(() => {
         if (!useEffectCalled){
@@ -174,14 +223,14 @@ const CircularProgress = () => {
     //timer after click
     useEffect(() => {
 
-        if (isActive && time > 0) {
+        if (isActive && clickTime > 0) {
             interval = setInterval(() => {
-                setTime((time) => time - 1);
+                setClickTime((time) => time - 1);
             }, 1000);
-        } else if (!isActive && time !== 0) {
+        } else if (!isActive && clickTime !== 0) {
             clearInterval(interval);
         }
-        else if (isActive && time === 0){
+        else if (isActive && clickTime === 0){
             clearInterval(interval);
             let button = document.getElementById('clickButton');
             if (energy>0){
@@ -194,26 +243,29 @@ const CircularProgress = () => {
         return () => {
             clearInterval(interval);
         }
-    }, [energy, isActive, time]);
+    }, [energy, isActive, clickTime]);
 
     //energy system
     useEffect(() => {
         if (!isEnergyFull && energyTime > 0){
             energyTInterval = setInterval(() => {
                 setEnergyTime((time) => time - 1);
-                localStorage.setItem('energyIncreaseRemain', JSON.stringify(energyTime))
-                const now: Date = new Date();
-                localStorage.setItem('energyTimeLastDropped', JSON.stringify(now.toUTCString()))
             }, 1000);
         }
         else if (!isEnergyFull && energyTime === 0){
             energyRemains++
             setEnergyAmount(energyRemains);
-            localStorage.setItem('energyLeft',JSON.stringify(energyRemains))
-            if (energyRemains === 100)
+            if (!vip)
+                localStorage.setItem('energyLeft',JSON.stringify(energyRemains))
+            else
+                localStorage.setItem('energyLeftVIP',JSON.stringify(energyRemains))
+
+            if ((!vip && energyRemains === 100)||(vip && energyRemains === 500))
                 setIsEnergyFull(true);
+
             setEnergyTime(increaseTime)
-            localStorage.setItem('energyIncreaseRemain', JSON.stringify(increaseTime))
+            const now: Date = new Date();
+            localStorage.setItem('energyTimeLastDropped', JSON.stringify(now.toUTCString()))
         }
         
         if (energy > 0 && !isActive){
@@ -225,12 +277,12 @@ const CircularProgress = () => {
         return () => {
             clearInterval(energyTInterval);
         }
-    },[isEnergyFull, energyTime, energy, isActive, time]);
+    },[isEnergyFull, energyTime, energy, isActive, clickTime]);
 
     const formatTime = () => {
         if (isActive){
-            const minutes = Math.floor(time / 60);
-            const seconds = `0${time % 60}`.slice(-2);
+            const minutes = Math.floor(clickTime / 60);
+            const seconds = `0${clickTime % 60}`.slice(-2);
             return `${minutes}:${seconds} to next tap`;
         }
         else if (energyRemains === 0){
@@ -242,7 +294,7 @@ const CircularProgress = () => {
     };
 
     const energyTimer = () => {
-        if (energyRemains < 100){
+        if ((vip && energyRemains < 500) || (!vip && energyRemains < 100)){
             const minutes = Math.floor(energyTime / 60);
             const seconds = `0${energyTime % 60}`.slice(-2);
             return `${minutes}:${seconds} to energy increase`;
@@ -254,7 +306,7 @@ const CircularProgress = () => {
 
     function SetTextColor(increase:number , color:string) {
         const multiplier = multiplierActive ? 2 : 1;
-        clickAmount += increase * multiplier;
+        clickScore += increase * multiplier;
         increaseAmount = increase * multiplier;
 
         if (multiplierActive) {
@@ -262,6 +314,7 @@ const CircularProgress = () => {
             localStorage.setItem('multiplierBoost', JSON.stringify(multiplierBoost));
             if (multiplierBoost === 0) {
                 multiplierActive = false;
+                CheckBoostIcons();
             }
         }
 
@@ -269,15 +322,15 @@ const CircularProgress = () => {
     }
 
     const ExchangeGamGamcy = () => {
-        const lottery = Math.floor(clickAmount / 10)+lotteryTicket;
+        const lottery = Math.floor(clickScore / 10)+lotteryTicket;
         setLotteryTicket(lottery);
-        setClickAmount(clickAmount%10);
-        localStorage.setItem('clickAmount', JSON.stringify(clickAmount%10));
+        setClickScore(clickScore%10);
+        localStorage.setItem('clickScore', JSON.stringify(clickScore%10));
         localStorage.setItem('lotteryTicket', JSON.stringify(lottery));
     }
 
     const resetTimer = () => {
-        setTime(initialTime);
+        setClickTime(initialTime);
         setIsActive(false);
     };
     const handleClick = () => {
@@ -334,15 +387,17 @@ const CircularProgress = () => {
         setIndicatorAngle(Math.random() * 360);
         setIsActive(true);
         setIsEnergyFull(false);
+        energyRemains--
         setEnergyAmount(energyRemains);
         setProgress(prevProgress => Math.min(prevProgress + 1));
-        setClickAmount(clickAmount);
+        setClickScore(clickScore);
         if (speedReduced && speedReducedBoost > 0) {
             speedReducedBoost--;
             localStorage.setItem('reduceSpeed', JSON.stringify(speedReducedBoost));
             if (speedReducedBoost === 0){
                 setSpeed(speed => speed + speed*0.25);
                 speedReduced = false;
+                CheckBoostIcons();
             }
         }
         if (increaseAreaBoost > 0){
@@ -352,13 +407,16 @@ const CircularProgress = () => {
                 yellowSectorSize = yellowSectorSize /2;
                 greenSectorSize = greenSectorSize /2;
                 areaGotBigger = false;
+                CheckBoostIcons();
             }
         }
-        localStorage.setItem('clickAmount',JSON.stringify(clickAmount))
-        localStorage.setItem('energyLeft',JSON.stringify(energyRemains))
+        localStorage.setItem('clickScore',JSON.stringify(clickScore))
+        if (!vip)
+            localStorage.setItem('energyLeft',JSON.stringify(energyRemains))
+        else
+            localStorage.setItem('energyLeftVIP',JSON.stringify(energyRemains))
 
         let button = document.getElementById('clickButton');
-        energyRemains--
         // @ts-ignore
         button.setAttribute("disabled","true");
     }
@@ -386,19 +444,21 @@ const CircularProgress = () => {
 
     return (
         <div className="clickPage">
-            <h2
+            <ProfileBar></ProfileBar>
+            <h3
                 style={{
                     color:"white",
-                    paddingTop: '20px'
-                }}>Tap Remains</h2>
+                    paddingTop: '65px',
+                    fontSize: "18px"
+                }}>Tap Remains</h3>
             <h2 style={{
                 color: "white",
-                fontSize: "42px"
+                fontSize: "33px"
             }}
             >{energyRemains + "/" + energyLimit}
                 <div style={containerStyle}>
                     <div style={{width: '50%'}}>
-                        <ProgressBar energy={energyRemains}></ProgressBar>
+                        <ProgressBar energy={(energyRemains/energyLimit)*100}></ProgressBar>
                     </div>
                 </div>
                 <div style={{
@@ -422,7 +482,7 @@ const CircularProgress = () => {
             <div style={{
                 cursor: 'pointer',
                 width: '100%',
-                height: '28vh',
+                height: '25vh',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center'
@@ -475,7 +535,7 @@ const CircularProgress = () => {
             </div>
             <button id="clickButton" onClick={handleClick} style={{
                 width: '100vw',
-                height: '75vh',
+                height: '72vh',
                 margin: 0,
                 border: 'none',
                 backgroundColor: 'transparent',
@@ -503,7 +563,7 @@ const CircularProgress = () => {
             }}>Streak: {streak}</h2>
             <h2 style={{
                 color: "white",
-            }}>GamGamcy: <text>{number}</text> {showMessage && <text style={{color: messageColor}}>+{increaseAmount}</text>}</h2>
+            }}>GamGamcy: <text>{clickS}</text> {showMessage && <text style={{color: messageColor}}>+{increaseAmount}</text>}</h2>
             <div>
                 <h2>
                     GamGamket: <text>{lotteryTicket}</text>
@@ -517,6 +577,10 @@ const CircularProgress = () => {
                     marginTop: 3
                 }}>{"Exchange"}</button>
             </div>
+            <RewardCollectPopup isOpen={isPopupOpen} close={() => setPopupOpen(false)}>
+                <p>For exchange your points,</p>
+                <p>you need to create a wallet!</p>
+            </RewardCollectPopup>
 
         </div>
     );
