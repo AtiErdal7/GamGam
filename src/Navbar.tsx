@@ -10,7 +10,7 @@ const Navbar = () => {
 
     return(
         <nav className="navbar">
-            <TonConnectButton className="navbarButtons wallet-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'" ></TonConnectButton>
+            <TonConnectButton></TonConnectButton>
             <NavLink to={"/boosts"} className="navbarButtons boost-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Boost</NavLink>
             <NavLink to={"/"} className="navbarButtons play-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Play</NavLink>
             <NavLink to={"/deals"} className="navbarButtons hotdeals-link ({ isActive }) => isActive ? 'navbarButtons active' : 'navbarButtons'">Deals</NavLink>

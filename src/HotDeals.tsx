@@ -3,6 +3,8 @@ import ProfileBar from "./ProfileBar";
 import ScrollContainerHorizontal from "./ScrollContainerHorizontal";
 import ScrollContainerVertical from "./ScrollContainerVertical";
 
+let itemsList = ['Achievement 1', 'Achievement 2', 'Achievement 3', 'Achievement 4', 'Achievement 5']
+
 const HotDeals = () => {
     return (
         <div style={{
@@ -34,7 +36,7 @@ const HotDeals = () => {
                 fontSize: 14,
             }}>You can check your available quests here!</h2>
             <div>
-                <ScrollContainerVertical height={window.innerHeight/100*38}></ScrollContainerVertical>
+                <ScrollContainerVertical height={window.innerHeight/100*38} itemsList = {itemsList}></ScrollContainerVertical>
             </div>
         </div>
     );

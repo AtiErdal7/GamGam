@@ -161,9 +161,10 @@ button:focus, input:focus, select:focus, textarea:focus {
   left: 50%;
   top: 0;
   transform: translateX(-50%);
-  display: flex;
-  justify-content: left;
-  align-items: center;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: auto auto;
+  grid-template-areas: "first-column-left first-column-right";
   width: 100%;
   padding-top: 16px;
   padding-left: 16px;
@@ -174,8 +175,40 @@ button:focus, input:focus, select:focus, textarea:focus {
    background-size: 50px;
    background-color: #2F2F2F;
    background-image: url('/src/images/ProfilePic.png');
+   grid-area: first-column-left;
    border-radius: 50%;
  }
+
+.membership{
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 40px;
+}
+
+.membershipPage{
+  height: 90vh;
+  background-position: center;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  background-image: url('/src/images/PremiumMembership.png');
+  background-repeat: no-repeat;
+}
+.membershipPageOverlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.mBasic{
+  background-image: url('/src/images/BasicMembership.png');
+}
+.mPremium{
+  background-image: url('/src/images/PremiumMembership.png');
+}
 .profileDetails{
     position: fixed;
     display: grid;
@@ -211,7 +244,6 @@ button:focus, input:focus, select:focus, textarea:focus {
   width: 90px;
   height: 50px;
   font-size: 12px;
-
 }
 .profile-pic-big{
   width: 114px;

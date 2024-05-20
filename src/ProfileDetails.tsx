@@ -1,16 +1,24 @@
 import React, {ChangeEvent, FormEvent, useState} from 'react';
 import ScrollContainerHorizontal from "./ScrollContainerVertical";
 import NameEditor from "./NameEditor";
+import {useTonWallet} from "@tonconnect/ui-react";
 
 let nick = "Guest";
+let walletId = "";
+let itemsList = ['Achievement 1', 'Achievement 2', 'Achievement 3', 'Achievement 4', 'Achievement 5']
 
 const ProfileDetails = () => {
+
+    const wallet = useTonWallet();
 
     const [isNameEditorOpen, setNameEditorOpen] = useState(false);
     const [name, setName] = useState<string>(nick);
     const [isCopied, setIsCopied] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
-    const walletId = "000000000001";
+
+    if (wallet !== null){
+        walletId = wallet?.account.address;
+    }
 
     // @ts-ignore
     const nickname = JSON.parse(localStorage.getItem('nickname'));
@@ -103,7 +111,7 @@ const ProfileDetails = () => {
                     paddingLeft: 10,
                     gridArea: "third-row"
                 }}>
-                    <ScrollContainerHorizontal height={window.innerHeight/100*58}></ScrollContainerHorizontal>
+                    <ScrollContainerHorizontal height={window.innerHeight/100*58} itemsList = {itemsList}></ScrollContainerHorizontal>
                 </div>
                 <NameEditor isOpen={isNameEditorOpen} close={() => setNameEditorOpen(false)}>
                     <p>You can change your name here.</p>

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import ProfileBar from "./ProfileBar";
 
 let countdownIntArea: any = null;
 let countdownIntSpeed: any = null;
@@ -152,6 +153,7 @@ const BoostPage = () => {
 
     return (
         <div>
+            <ProfileBar></ProfileBar>
             <div>
                 <button onClick={fillEnergy} style={{
                     backgroundColor: "grey",
