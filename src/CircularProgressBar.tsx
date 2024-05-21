@@ -1,9 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {
-    useIsConnectionRestored,
-    useTonAddress,
-    useTonConnectUI,
-} from "@tonconnect/ui-react";
 import RewardCollectPopup from "./RewardCollectPopup";
 import ProfileBar from "./ProfileBar";
 let clickScore = 0;
@@ -76,14 +71,6 @@ const CircularProgress = () => {
         alignItems: 'center',
         cursor: 'pointer'
     };
-
-    const [tonConnectUI] = useTonConnectUI();
-
-    tonConnectUI.setConnectRequestParameters({
-        state: 'loading'
-    });
-    useTonAddress();
-    useIsConnectionRestored();
 
     function SetEnergyRemains(timePassed:number,maxEnergy:number){
         if (Math.floor((timePassed)/120) + energyRemains > maxEnergy){

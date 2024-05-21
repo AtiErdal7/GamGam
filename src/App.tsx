@@ -15,22 +15,13 @@ function App() {
         document.body.style.overflow = 'hidden';
 
     }, []);
+
+
   return (
-      <TonConnectUIProvider manifestUrl="https://t.me/GamGamAppBot/GamGamApp/tonconnect-manifest.json"
-                            walletsListConfiguration={{
-                                includeWallets: [
-                                    {
-                                        appName: "tonwallet",
-                                        name: "TON Wallet",
-                                        imageUrl: "https://wallet.ton.org/assets/ui/qr-logo.png",
-                                        aboutUrl: "https://chrome.google.com/webstore/detail/ton-wallet/nphplpgoakhhjchkkhmiggakijnkhfnd",
-                                        universalLink: "https://wallet.ton.org/ton-connect",
-                                        jsBridgeKey: "tonwallet",
-                                        bridgeUrl: "https://bridge.tonapi.io/bridge",
-                                        platforms: ["chrome", "android"]
-                                    }
-                                ]
-                            }}>
+      <TonConnectUIProvider manifestUrl="https://playable.marketing/tonconnect-manifest.json"
+      actionsConfiguration={{
+          twaReturnUrl: 'https://t.me/GamGamAppBot/GamGamApp'
+      }}>
           <Router>
               <div className="App">
                   <div className="content">
