@@ -19,7 +19,7 @@ function ProfileBar() {
     else{
         membership = "membership mBasic"
     }
-
+ 0
 
     return (
         <div className="profileBar">

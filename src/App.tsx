@@ -37,7 +37,6 @@ function App() {
               </div>
           </Router>
       </TonConnectUIProvider>
-
   );
 }
 export default App;

@@ -18,7 +18,7 @@ const SigninRewardPage = () => {
 
 
     return (
-        <div className="signin" style={{
+        <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(5, 60px)',
             gridGap: '6.5px',
