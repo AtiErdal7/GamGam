@@ -16,11 +16,10 @@ function App() {
 
     }, []);
 
-
   return (
       <TonConnectUIProvider manifestUrl="https://playable.marketing/tonconnect-manifest.json"
       actionsConfiguration={{
-          twaReturnUrl: 'https://t.me/GamGamAppBot/GamGamApp'
+          twaReturnUrl: 'https://playable.marketing'
       }}>
           <Router>
               <div className="App">
